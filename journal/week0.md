@@ -1,10 +1,10 @@
 # Week 0 — Billing and Architecture
 
-## Spend Notes  
+## **Spend Notes**  
 
 - Pricing varies between regions.
     
-### Billing Resource(FREE):
+#### Billing Resource(FREE):
 -  **Bills** - You can check month by month resources used and cost
 - **Free Tier** - Allows you to monitor your Free tier usage
 - **Billing preferences** - Allows you to set an email address to send billing alerts to
@@ -21,7 +21,7 @@
 
 
 
-## Security Notes 
+## **Security Notes** 
 
 #### Cyber security goal? 
 Inform a business on any tech risk that a business may be exposed to - Make sure the business is INFORMED on the RISK
@@ -61,7 +61,7 @@ helps prevent human error
 #### AWS GuardDuty ($$):
 - Threat detection service for AWS
 
-##### TOP 5 Cloud Security Practices!
+#### TOP 5 Cloud Security Practices!
 - **Data Protection & Residency in accordance to Security Policy** - The data should be stored in the country that it makes sense to be stored in
 - **IAM with Least Privilege** - Give users just enough permissions to do their job
 - **Governance & Compliance of AWS Services being used** - Understand local laws and regulation with data (Global vs Regional)
