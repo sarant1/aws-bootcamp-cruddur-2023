@@ -74,11 +74,12 @@ helps prevent human error
 ## Link to my Conceptual Diagram that I built during the Saturday livestream!
 
 [My Concept Diagram Link](https://lucid.app/lucidchart/d98638dd-26a3-41d9-9da7-b9f6ce5c3ae7/edit?viewport_loc=-345%2C-108%2C2212%2C977%2C0_0&invitationId=inv_11a472ce-bc07-4b23-9b84-33caff3806d7)
+![Concept Diagram Link](./assets/Napkin.png)
 
 ## Link to my Logical Architectual Diagram!
 
 [My Logical Diagram Link](https://lucid.app/lucidchart/cb278a33-5ff1-4613-af80-d545c8670e8a/edit?viewport_loc=-678%2C-1354%2C3318%2C1466%2C0_0&invitationId=inv_d5d3fa2f-31cc-435c-84b3-2b6bb0bf4616)
-
+![Logical Diagram Photo](./assets/Logical.png)
 
 ## Proof of AWS CLI installed
 
