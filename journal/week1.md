@@ -69,5 +69,5 @@
 #### Generally managed services are better and easier
 #### Automation to provision conatiners at scale with speed
 
-## Spend Notes
+
 
