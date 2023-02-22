@@ -71,6 +71,7 @@
 
 ## **Configuration** 
 ### - I set up gitpod with aws cli so that I could follow instructions easier
+### - Created a table and an item to ensure dynamodb is working
 
 
 
