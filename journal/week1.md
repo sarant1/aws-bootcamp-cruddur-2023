@@ -69,5 +69,8 @@
 #### Generally managed services are better and easier
 #### Automation to provision conatiners at scale with speed
 
+## **Configuration** 
+### - I set up gitpod with aws cli so that I could follow instructions easier
+
 
 
