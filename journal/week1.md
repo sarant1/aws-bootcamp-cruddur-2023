@@ -73,6 +73,7 @@
 ### - I set up gitpod with aws cli so that I could follow instructions easier
 ### - Created a table and an item to ensure dynamodb is working
 ### - I had to set up security keys after noticing I accidentely commited them in my repo
+### - I used git-filter to practice removing the push from my git history
 
 
 
