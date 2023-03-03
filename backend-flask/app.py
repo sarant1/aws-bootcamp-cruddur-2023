@@ -44,8 +44,8 @@ from opentelemetry.sdk.trace.export import BatchSpanProcessor
 # LOGGER.info("test log")
 
 # X-RAY ------
-xray_url = os.getenv("AWS_XRAY_URL")
-xray_recorder.configure(service='backend-flask', dynamic_naming=xray_url)
+#xray_url = os.getenv("AWS_XRAY_URL")
+#xray_recorder.configure(service='backend-flask', dynamic_naming=xray_url)
 
 # HoneyComb -------
 # Initialize automatic instrumentation with Flask
