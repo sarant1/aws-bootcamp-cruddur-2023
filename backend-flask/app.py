@@ -4,7 +4,7 @@ from flask_cors import CORS, cross_origin
 import os
 import sys
 
-from lib.cognito_jwt_token import  CognitoJwtToken
+from lib.cognito_jwt_token import CognitoJwtToken, extract_access_token, TokenVerifyError
 
 from services.home_activities import *
 from services.notifications_activities import *
@@ -162,20 +162,19 @@ def data_notifications():
 @app.route("/api/activities/home", methods=['GET'])
 @xray_recorder.capture('activities_home')
 def data_home():
-  access_token = CognitoJwtToken.extract_access_token(request.headers)
+  app.logger.debug(request.headers)
+  access_token = extract_access_token(request.headers)
   try:
-    claims = cognito_jwt_token.token_service.verify(access_token)
-    cognito_jwt_token.claims = self.token_service.claims
-    g.cognito_claims = self.claims
+    claims = cognito_jwt_token.verify(access_token)
+    # authenticated request
+    app.logger.debug('Claims')
+    app.logger.debug(claims['username'])
+    app.logger.debug("authenticated")
+    data = HomeActivities.run(cognito_user_id=claims['username'])
   except TokenVerifyError as e:
     _ = request.data
-    abort(make_response(jsonify(message=str(e)), 401))
-  app.logger.debug('Claims')
-  app.logger.debug(claims)
-
-  data = HomeActivities.run()
-  claims = aws_auth.claims # also available through g.cognito_claims
-  
+    app.logger.debug("unauthenticated")
+    data = HomeActivities.run()
   return data, 200
 
 @app.route("/api/activities/@<string:handle>", methods=['GET'])
