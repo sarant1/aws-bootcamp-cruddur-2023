@@ -2,6 +2,9 @@ from flask import Flask
 from flask import request
 from flask_cors import CORS, cross_origin
 import os
+import sys
+
+from lib.cognito_jwt_token import  CognitoJwtToken
 
 from services.home_activities import *
 from services.notifications_activities import *
@@ -15,6 +18,7 @@ from services.create_message import *
 from services.show_activity import *
 from aws_xray_sdk.core import xray_recorder
 from aws_xray_sdk.ext.flask.middleware import XRayMiddleware
+
 
 # Cloudwatch ---
 import watchtower
@@ -60,6 +64,12 @@ tracer = trace.get_tracer(__name__)
 
 app = Flask(__name__)
 
+
+cognito_jwt_token = CognitoJwtToken(
+  user_pool_id=os.getenv('AWS_COGNITO_USER_POOL_ID'), 
+  user_pool_client_id=os.getenv('AWS_COGNITO_USER_POOL_CLIENT_ID'), 
+  region=os.getenv('AWS_DEFAULT_REGION')
+  )
 # X-Ray -----
 XRayMiddleware(app, xray_recorder)
 
@@ -74,8 +84,8 @@ origins = [frontend, backend]
 cors = CORS(
   app, 
   resources={r"/api/*": {"origins": origins}},
-  expose_headers="location,link",
-  allow_headers="content-type,if-modified-since",
+  headers=['Content-Type', 'Authorization'], 
+  expose_headers='Authorization',
   methods="OPTIONS,GET,HEAD,POST"
 )
 
@@ -152,7 +162,20 @@ def data_notifications():
 @app.route("/api/activities/home", methods=['GET'])
 @xray_recorder.capture('activities_home')
 def data_home():
+  access_token = CognitoJwtToken.extract_access_token(request.headers)
+  try:
+    claims = cognito_jwt_token.token_service.verify(access_token)
+    cognito_jwt_token.claims = self.token_service.claims
+    g.cognito_claims = self.claims
+  except TokenVerifyError as e:
+    _ = request.data
+    abort(make_response(jsonify(message=str(e)), 401))
+  app.logger.debug('Claims')
+  app.logger.debug(claims)
+
   data = HomeActivities.run()
+  claims = aws_auth.claims # also available through g.cognito_claims
+  
   return data, 200
 
 @app.route("/api/activities/@<string:handle>", methods=['GET'])
