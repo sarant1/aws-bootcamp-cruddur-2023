@@ -167,13 +167,9 @@ def data_home():
   try:
     claims = cognito_jwt_token.verify(access_token)
     # authenticated request
-    app.logger.debug('Claims')
-    app.logger.debug(claims['username'])
-    app.logger.debug("authenticated")
     data = HomeActivities.run(cognito_user_id=claims['username'])
   except TokenVerifyError as e:
     _ = request.data
-    app.logger.debug("unauthenticated")
     data = HomeActivities.run()
   return data, 200
 

@@ -16,13 +16,16 @@ class HomeActivities:
       sql = """
       SELECT * FROM activities
       """
-      
+      json = {}
       with pool.connection() as conn:
         with conn.cursor() as cur:
           cur.execute(sql)
           # this will return a tuple
           # the first field being the data
           json = cur.fetchall()
-      
+          print("=3-----==")
+          print(json)
+          for record in cur:
+            print(Record)
       return json[0]
       return results

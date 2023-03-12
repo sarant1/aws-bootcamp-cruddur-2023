@@ -5,18 +5,8 @@ NO_COLOR='\033[0m'
 LABEL="db-seed"
 printf "${CYAN}== ${LABEL}${NO_COLOR}\n"
 
-echo "ARG---"
-echo $1
+schema_path="$(realpath .)/db/schema.sql"
 
+echo $schema_path
 
-echo "db-schema-load"
-seed_path="$(realpath ..)/backend-flask/db/schema.sql"
-
-if ["$1" = "prod" ]; then
-    echo "using production"
-    CON_URL=$PROD_CONNECTION_URL
-else
-    CON_URL=$CONNECTION_URL
-fi
-
-psql $CON_URL cruddur < $schema_path
+psql $CONNECTION_URL cruddur < $schema_path
