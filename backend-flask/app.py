@@ -143,7 +143,7 @@ def data_messages(handle):
 @app.route("/api/messages", methods=['POST','OPTIONS'])
 @cross_origin()
 def data_create_message():
-  user_sender_handle = 'andrewbrown'
+  user_sender_handle = 'AndrewBrown'
   user_receiver_handle = request.json['user_receiver_handle']
   message = request.json['message']
 
@@ -194,6 +194,7 @@ def data_search():
 @app.route("/api/activities", methods=['POST','OPTIONS'])
 @cross_origin()
 def data_activities():
+  print(request, flush=True)
   user_handle  = 'andrewbrown'
   message = request.json['message']
   ttl = request.json['ttl']

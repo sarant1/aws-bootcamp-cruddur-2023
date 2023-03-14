@@ -26,23 +26,21 @@ class Db:
     return template_content
 
   # be sure to check for RETURNING in all uppercases
-  def query_commit_with_returning_id(self, sql, *kwargs):
-    self.print_sql('commit with returing', sql)
+  def query_commit_with_returning_id(self, sql, params={}):
+    self.print_sql('commit with returning', sql)
     
-
     pattern = r"\bRETURNING\b"
     is_returning_id = re.search(pattern, sql)
     
-
     try:
-      conn = self.pool
-      cur = conn.cursor()
-      cur.execute(sql, kwargs)
-      if is_returning_id:
-          returning_id = cur.fetchone()[0]
-      conn.commit
-      if is_returning_id:
-        return returning_id 
+      with self.pool.connection() as conn:
+        cur = conn.cursor()
+        cur.execute(sql, params)
+        if is_returning_id:
+            returning_id = cur.fetchone()[0]
+        conn.commit()
+        if is_returning_id:
+          return returning_id 
     except Exception as err:
       self.print_sql_err(err)
 

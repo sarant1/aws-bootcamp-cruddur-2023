@@ -7,14 +7,18 @@ class CreateActivity:
       sql = db.template('create_activity')
 
       db.query_commit_with_returning_id(sql)
-  #def query_object_activity():
-      uuid = db.query_commit_with_returning_id(sql, {
+      #def query_object_activity():
+      
+      params = {
         'handle': handle,
-        'message': message,
+        'message': message, 
         'expires_at': expires_at
-        })
+      }
+      
+      uuid = db.query_commit_with_returning_id(sql, params)
 
   def run(message, user_handle, ttl):
+
     model = {
       'errors': None,
       'data': None
