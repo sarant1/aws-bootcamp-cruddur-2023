@@ -199,6 +199,7 @@ def data_activities():
   message = request.json['message']
   ttl = request.json['ttl']
   model = CreateActivity.run(message, user_handle, ttl)
+  
   if model['errors'] is not None:
     return model['errors'], 422
   else:
@@ -217,6 +218,7 @@ def data_activities_reply(activity_uuid):
   user_handle  = 'andrewbrown'
   message = request.json['message']
   model = CreateReply.run(message, user_handle, activity_uuid)
+  
   if model['errors'] is not None:
     return model['errors'], 422
   else:
