@@ -2,13 +2,10 @@ from psycopg_pool import ConnectionPool
 import os,sys,re
 from flask import current_app as app
 
-
-
-
-
 class Db:
   def __init__(self):
     self.init_pool()
+
   def init_pool(self):
     connection_url = os.getenv("CONNECTION_URL")
     self.pool = ConnectionPool(connection_url)
@@ -31,13 +28,13 @@ class Db:
     green = "\033[92m"
     no_color = "\033[0m"
     template_path = os.path.join(*pathing)
-    print(f'{green}PATHING-----{template_path}{no_color}', flush=True)
+    print(f'{green}LOADING SQL TEMPLATE{template_path}{no_color}', flush=True)
     with open(template_path,'r') as f:
       template_content = f.read()
     return template_content
 
   # be sure to check for RETURNING in all uppercases
-  def query_commit_with_returning_id(self, sql, params={}):
+  def query_commit(self, sql, params={}):
     self.print_sql('commit with returning', sql)
     
     pattern = r"\bRETURNING\b"
@@ -77,7 +74,7 @@ class Db:
   def query_object_json(self, sql, params={}):
     self.print_sql('json', sql)
 
-    wrapped_sql = self.query_wrap_array(sql)
+    wrapped_sql = self.query_wrap_object(sql)
     self.print_params(params)
 
     print("SQL STATEMENT------[object]------------")

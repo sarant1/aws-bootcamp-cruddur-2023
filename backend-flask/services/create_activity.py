@@ -4,7 +4,7 @@ from lib.db import db
 class CreateActivity:
   def create_activity(handle, message, expires_at):
       sql = db.template('activities', 'create')
-      return db.query_commit_with_returning_id(sql, {
+      return db.query_commit(sql, {
         'handle': handle,
         'message': message, 
         'expires_at': expires_at
@@ -13,7 +13,7 @@ class CreateActivity:
   def query_object_activity(uuid):
     sql = db.template('activities', 'object')
 
-    db.query_commit_with_returning_id(sql)
+    db.query_commit(sql)
     #def query_object_activity():
     
     return db.query_object_json(sql, {
