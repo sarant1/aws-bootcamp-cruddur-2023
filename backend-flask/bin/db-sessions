@@ -8,7 +8,6 @@ else
 fi
 
 NO_DB_URL=$URL
-echo $NO_DB_URL
 psql $NO_DB_URL -c "select pid as process_id, \
        usename as user,  \
        datname as db, \

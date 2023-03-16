@@ -15,6 +15,5 @@ else
 fi
 
 NO_DB_CONNECTION_URL=$URL
-echo $NO_DB_CONNECTION_URL 
 psql $NO_DB_CONNECTION_URL -c "drop database cruddur;"
 
