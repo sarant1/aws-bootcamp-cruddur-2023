@@ -23,5 +23,9 @@ I had a bug that I spent a long time trying to fix and I was getting a key error
 - Have encryption in Transist as well as in rest
 - Authentication use IAM, or kerberos etc (not the default)
 
+## Local Environment
+
+Currently attempting to set up the local environment but it via Devcontainers but Having issues installing devcontainer.  It says the devcontainer is already symlinked but it is still not working.  
+
 
 
