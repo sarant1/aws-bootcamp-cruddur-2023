@@ -66,5 +66,5 @@
   "remoteUser": "bootcamp",
 
   "postAttachCommand": "cd ./frontend-react-js && npm install && cd ../backend-flask && pip install -r requirements.txt",
-  "postCreateCommand": "cd ./devcontainer && ./postCreate.sh"
+  "postCreateCommand": "cd ./.devcontainer && ./postCreate.sh"
 }
