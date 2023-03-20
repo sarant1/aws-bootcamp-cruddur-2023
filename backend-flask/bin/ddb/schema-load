@@ -1,0 +1,50 @@
+#!/usr/bin/env python3
+
+import boto3
+import sys
+
+attrs = {
+    'endpoint_url': 'http://localhost:8000'
+}
+if len(sys.argv) == 2:
+    if "prod" in sys.argv[1]:
+        attrs = {}
+ddb = boto3.client('dynamodb', **attrs)
+
+table_name = 'cruddur-message'
+
+response = ddb.create_table(
+    AttributeDefinitions=[
+        {
+            'AttributeName': 'pk',
+            'AttributeType': 'S' # S = STRING, N = NUMBER, B = BINARY
+        },
+        {
+            'AttributeName': 'sk',
+            'AttributeType': 'S' # S = STRING, N = NUMBER, B = BINARY
+        }
+    ],
+    TableName=table_name,
+    KeySchema=[
+        {
+            'AttributeName': 'pk',
+            'KeyType': 'HASH'
+        },
+        {
+            'AttributeName': 'sk',
+            'KeyType': 'RANGE'
+        }
+    ],
+    
+    #GlobalSecondaryIndexes=[
+    #],
+
+    # PROVISIONED = FREE TIER
+    BillingMode='PROVISIONED',
+    ProvisionedThroughput={
+        'ReadCapacityUnits': 5,
+        'WriteCapacityUnits': 5
+    }
+)
+
+print(response)
