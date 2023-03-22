@@ -14,5 +14,5 @@ else
   URL=$(sed 's/cruddur//g' <<< $CONNECTION_URL)
 fi
 
-psql $URL -c "drop database cruddur;"
+psql $URL -c "drop database IF EXISTS cruddur;"
 
