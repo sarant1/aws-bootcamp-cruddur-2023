@@ -22,6 +22,7 @@ def update_users_with_cognito_user_id(handle,sub):
   })
 
 def get_cognito_user_ids():
+  print("======AWS COGNITO USER POOL ID======= \n", os.getenv("AWS_COGNITO_USER_POOL_ID"), "\n==================")
   userpool_id = os.getenv("AWS_COGNITO_USER_POOL_ID")
   client = boto3.client('cognito-idp')
   params = {
@@ -39,7 +40,7 @@ def get_cognito_user_ids():
     sub    = next((a for a in attrs if a["Name"] == 'sub'), None)
     handle = next((a for a in attrs if a["Name"] == 'preferred_username'), None)
     dict_users[handle['Value']] = sub['Value']
-  return dict_users
+    return dict_users
 
 
 users = get_cognito_user_ids()

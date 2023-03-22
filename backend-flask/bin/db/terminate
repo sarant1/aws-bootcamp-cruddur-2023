@@ -1,0 +1,22 @@
+#! /usr/bin/bash
+
+
+if [ "$1" = "prod" ]; then
+    echo "Running in Production Mode"
+    URL=$PROD_CONNECTION_URL
+else
+    URL=$CONNECTION_URL\
+    URL=$(sed 's/cruddur//' <<< $URL)
+fi
+
+echo $URL
+DB_NAME='cruddur'
+psql $URL -c "
+
+SELECT pg_terminate_backend(pg_stat_activity.pid)
+FROM pg_stat_activity 
+WHERE pg_stat_activity.datname = '${DB_NAME}' 
+AND pid <> pg_backend_pid(); 
+"
+
+psql $URL -c "DROP DATABASE IF EXISTS ${DB_NAME};"
