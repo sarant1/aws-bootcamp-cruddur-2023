@@ -9,3 +9,9 @@
 - If your not sorting or using the certain data for a purpose, you can just store it all extra data in a json document
 - We are going to need two different Message Groups one for each person messaging eachother
 - My user uuid is from cognito(session) or Postgres.
+
+
+### Debugging struggles !
+- It seems I lost my journaling to this point due to it not being commited :/
+- Spent a few hours debugging a @ in my request, If I just would of watched the next minute of the video I wouldn't of wasted this time
+- 

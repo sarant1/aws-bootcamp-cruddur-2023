@@ -96,7 +96,7 @@ class Db:
       with conn.cursor() as cur:
         cur.execute(sql, params)
         json = cur.fetchone()
-        print("=======JSON RETURNED FROM QUERY=========", json, flush=True)
+        print("\033[94m=======JSON RETURNED FROM QUERY VALUE=========\033[0m\n", json, flush=True)
         return json[0]
 
   

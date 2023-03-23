@@ -18,6 +18,7 @@ from services.create_message import *
 from services.show_activity import *
 from aws_xray_sdk.core import xray_recorder
 from aws_xray_sdk.ext.flask.middleware import XRayMiddleware
+from services.users_short import *
 
 
 # Cloudwatch ---
@@ -125,8 +126,6 @@ def data_message_groups():
   try:
     claims = cognito_jwt_token.verify(access_token)
     # authenticated request
-    print("CLAIMS------------", flush=True)
-    print(claims, flush=True)
     cognito_user_id = claims['sub']
     model = MessageGroups.run(cognito_user_id)
     print("MODEL---------------\n", model, flush=True)
@@ -140,29 +139,63 @@ def data_message_groups():
   
   
 
-@app.route("/api/messages/@<string:handle>", methods=['GET'])
-def data_messages(handle):
-  user_sender_handle = 'andrewbrown'
+@app.route("/api/messages/<string:message_group_uuid>", methods=['GET'])
+def data_messages(message_group_uuid):
+  user_sender_handle = 'samuelarant'
   user_receiver_handle = request.args.get('user_reciever_handle')
-
-  model = Messages.run(user_sender_handle=user_sender_handle, user_receiver_handle=user_receiver_handle)
-  if model['errors'] is not None:
-    return model['errors'], 422
-  else:
-    return model['data'], 200
+  access_token = extract_access_token(request.headers)
+  try:
+    claims = cognito_jwt_token.verify(access_token)
+    # authenticated request
+    cognito_user_id = claims['sub']
+    model = Messages.run(
+      cognito_user_id=cognito_user_id,
+      message_group_uuid=message_group_uuid
+    )
+    if model['errors'] is not None:
+      return model['errors'], 422
+    else:
+      return model['data'], 200
+  except TokenVerifyError as e:
+    app.logger.debug(e)
+    return {}, 401
 
 @app.route("/api/messages", methods=['POST','OPTIONS'])
 @cross_origin()
 def data_create_message():
-  user_sender_handle = 'AndrewBrown'
-  user_receiver_handle = request.json['user_receiver_handle']
+  message_group_uuid   = request.json.get('message_group_uuid', None)
+  user_receiver_handle = request.json.get('handle', None)
   message = request.json['message']
 
-  model = CreateMessage.run(message=message,user_sender_handle=user_sender_handle,user_receiver_handle=user_receiver_handle)
-  if model['errors'] is not None:
-    return model['errors'], 422
-  else:
-    return model['data'], 200
+  access_token = extract_access_token(request.headers)
+  try:
+    claims = cognito_jwt_token.verify(access_token)
+    # authenticated request
+    cognito_user_id = claims['sub']
+    if message_group_uuid == None:
+    # Create for the first time
+      model = CreateMessage.run(
+      mode="create",
+      message=message,
+      cognito_user_id=cognito_user_id,
+      user_receiver_handle=user_receiver_handle
+    )
+    else:
+      # Push onto existing Message Group
+      model = CreateMessage.run(
+        mode="update",
+        message=message,
+        message_group_uuid=message_group_uuid,
+        cognito_user_id=cognito_user_id
+      )
+    
+    if model['errors'] is not None:
+      return model['errors'], 422
+    else:
+      return model['data'], 200
+  except TokenVerifyError as e:
+    app.logger.debug(e)
+    return {}, 401
 
 @app.route("/api/activities/notifications", methods=['GET'])
 def data_notifications():
@@ -221,6 +254,12 @@ def data_activities():
 def data_show_activity(activity_uuid):
   data = ShowActivity.run(activity_uuid=activity_uuid)
   return data, 200
+
+@app.route("/api/users/@<string:handle>/short", methods=['GET'])
+def data_users_short(handle):
+  data = UsersShort.run(handle)
+  return data, 200
+
 
 @app.route("/api/activities/<string:activity_uuid>/reply", methods=['POST','OPTIONS'])
 @cross_origin()
