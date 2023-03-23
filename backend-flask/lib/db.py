@@ -94,8 +94,9 @@ class Db:
     self.print_sql('value', sql, params)
     with self.pool.connection() as conn:
       with conn.cursor() as cur:
-        cur.execute(sql,params)
+        cur.execute(sql, params)
         json = cur.fetchone()
+        print("=======JSON RETURNED FROM QUERY=========", json, flush=True)
         return json[0]
 
   

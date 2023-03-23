@@ -121,7 +121,6 @@ cors = CORS(
 
 @app.route("/api/message_groups", methods=['GET'])
 def data_message_groups():
-  print(request.headers, flush=True)
   access_token = extract_access_token(request.headers)
   try:
     claims = cognito_jwt_token.verify(access_token)
@@ -130,7 +129,7 @@ def data_message_groups():
     print(claims, flush=True)
     cognito_user_id = claims['sub']
     model = MessageGroups.run(cognito_user_id)
-    print(model, flush=True)
+    print("MODEL---------------\n", model, flush=True)
     if model['errors'] is not None:
       return model['errors'], 422
     else:
