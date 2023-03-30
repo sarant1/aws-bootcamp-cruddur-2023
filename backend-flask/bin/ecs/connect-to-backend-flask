@@ -1,0 +1,15 @@
+#! /usr/bin/bash
+
+if [ -z "$1" ]; then
+    echo "No Task Provided D eg ./bin/ecs/connect-to-backend-flask s3fafklgja9j1292j"
+    exit 1
+fi
+TASK_ID=$1
+
+aws ecs execute-command  \
+--region $AWS_DEFAULT_REGION \
+--cluster cruddur \
+--task $TASK_ID \
+--container backend-flask \
+--command "/bin/bash" \
+--interactive

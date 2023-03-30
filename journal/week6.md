@@ -26,3 +26,5 @@
 fixed: I added the permissions to the exection role and it worked (b4 I was adding to the task role)
 
 - I used the Load Balancer ARN instead of the target group ARN which was giving me a permisisons error
+
+- I am using a load balancer currrently so I had to configure it so that if the host header is from my IONOS domain routes to port 444 which is cruddur
