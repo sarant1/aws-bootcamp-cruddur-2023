@@ -32,3 +32,6 @@ fixed: I added the permissions to the exection role and it worked (b4 I was addi
 - I built my front end docker conatiner with the cruddur.com as my BACKEND URL.  This was causing an error because front end was requestiong to https://cruddur.com/api/activities and not my domain.  
 
 - Was having a cors error, likely because im running cruddur on port 444 so I had to add that port to the front end origin.  
+
+- I scratched using my load balancer for two different apps as it was getting too complex.  I set it up again and ran into an error because I set fronted url to "http" and it had to be "https"
+

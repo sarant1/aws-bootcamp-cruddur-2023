@@ -44,8 +44,8 @@
         {"name": "OTEL_EXPORTER_OTLP_ENDPOINT", "value": "https://api.honeycomb.io"},
         {"name": "AWS_COGNITO_USER_POOL_ID", "value": "us-east-1_TdXUKxHct"},
         {"name": "AWS_COGNITO_USER_POOL_CLIENT_ID", "value": "1hrc6ma39r7iqp4iv48agr0kgc"},
-        {"name": "FRONTEND_URL", "value": "*"},
-        {"name": "BACKEND_URL", "value": "*"},
+        {"name": "FRONTEND_URL", "value": "https://app.sudosam.com"},
+        {"name": "BACKEND_URL", "value": "https://api.sudosam.com"},
         {"name": "AWS_DEFAULT_REGION", "value": "us-east-1"}
       ],
       "secrets": [
@@ -58,3 +58,5 @@
     }
   ]
 }
+
+
