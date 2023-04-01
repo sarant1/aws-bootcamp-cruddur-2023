@@ -19,4 +19,4 @@ WHERE pg_stat_activity.datname = '${DB_NAME}'
 AND pid <> pg_backend_pid(); 
 "
 
-psql $URL -c "DROP DATABASE IF EXISTS ${DB_NAME};"
+# psql $URL -c "DROP DATABASE IF EXISTS ${DB_NAME};"
