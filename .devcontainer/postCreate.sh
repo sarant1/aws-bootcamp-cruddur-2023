@@ -13,5 +13,6 @@ sudo dpkg -i session-manager-plugin.deb
 
 rm session-manager-plugin.deb
 
+echo $(pwd)
 ./bin/frontend/generate-env
 ./bin/backend/generate-env
