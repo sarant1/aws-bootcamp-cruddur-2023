@@ -53,3 +53,13 @@ fixed: I added the permissions to the exection role and it worked (b4 I was addi
 **Amazon ECR Images Security**
 - Enable scan on push to allow ecr. 
 - AWS inspector uses snyk in the background
+
+**Amazon ECS Security Best Practices**
+- CLoud Control Plane - Access control (who controls container images)
+- Choosing public or private ECR for images
+- Use VPC Endpoints or Secuirty Groups with known sources only
+- Do not put secrets passwords in containers - Use paramter store or Secrets manager
+- Only use Trusted Containers from ECR with no HIGH/CRITICAL V
+- Limit ability to ssh into EC2 container
+- Make sure to have xray daemon installed on ec2 isntance
+- Use only authorized container images
