@@ -7,7 +7,7 @@ ENVFILE_PATH=$(dirname $BIN_PATH)
 
 
 docker run --rm \
-    --env-file "$ENVFILE_PATH/backend-flaskx.env" \
+    --env-file "$ENVFILE_PATH/frontend-react-jsx.env" \
     --network cruddur-net \
     --publish 4567:4567 \
-    -it backend-flask-prod
+    -it frontend-react-js-prod

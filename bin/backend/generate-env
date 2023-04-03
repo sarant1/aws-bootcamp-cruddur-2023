@@ -1,8 +1,13 @@
 #!/usr/bin/env ruby
 
+
+# q: is co-pilot enabled?
+# a: 
+
+
 require 'erb'
 
-template = File.read 'erb/backend-flask.env.erb'
-content = ERB.new(template).result(binding)
-filename = "backend-flaskx.env"
+template=File.read 'erb/backend-flask.env.erb'
+content=ERB.new(template).result(binding)
+filename="backend-flaskx.env"
 File.write(filename, content)
