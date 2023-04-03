@@ -1,35 +1,16 @@
 version: "3.8"
 services:
   backend-flask:
-    environment:
-      CONNECTION_URL: "${PROD_CONNECTION_URL}"
-      #CONNECTION_URL: "postgresql://postgres:password@db:5432/cruddur"
-      FRONTEND_URL: "http://localhost:3000"
-      BACKEND_URL: "http://localhost:4567"
-      OTEL_SERVICE_NAME: "backend-flask"
-      OTEL_EXPORTER_OTLP_ENDPOINT: "https://api.honeycomb.io"
-      OTEL_EXPORTER_OTLP_HEADERS: "x-honeycomb-team=${HONEYCOMB_API_KEY}"
-      AWS_XRAY_URL: "*localhost:4567*"
-      AWS_XRAY_DAEMON_ADDRESS: "xray-daemon:2000"
-      AWS_DEFAULT_REGION: "${AWS_DEFAULT_REGION}"
-      AWS_ACCESS_KEY_ID: "${AWS_ACCESS_KEY_ID}"
-      AWS_SECRET_ACCESS_KEY: "${AWS_SECRET_ACCESS_KEY}"
-      ROLLBAR_ACCESS_TOKEN: "${ROLLBAR_ACCESS_TOKEN}"
-      AWS_COGNITO_USER_POOL_ID: "us-east-1_TdXUKxHct"
-      AWS_COGNITO_USER_POOL_CLIENT_ID: "1hrc6ma39r7iqp4iv48agr0kgc"
-      #AWS_ENDPOINT_URL: "http://dynamodb-local:8000"
+    env_file:
+      - .env.backend-flask
     build: ./backend-flask
     ports:
       - "4567:4567"
     volumes:
       - ./backend-flask:/backend-flask
   frontend-react-js:
-    environment:
-      REACT_APP_AWS_PROJECT_REGION: "${AWS_DEFAULT_REGION}"
-      REACT_APP_AWS_COGNITO_REGION: "${AWS_DEFAULT_REGION}"
-      REACT_APP_AWS_USER_POOLS_ID: "us-east-1_TdXUKxHct"
-      REACT_APP_CLIENT_ID: "1hrc6ma39r7iqp4iv48agr0kgc"
-      REACT_APP_BACKEND_URL: "http://localhost:4567"
+    env_file:
+      - .env.frontend-react-js
     build: ./frontend-react-js
     ports:
       - "3000:3000"
@@ -74,9 +55,9 @@ services:
 # the name flag is a hack to change the default prepend folder
 # name when outputting the image names
 networks:
-  internal-network:
+  default:
     driver: bridge
-    name: cruddur
+    name: cruddur-net
 volumes:
   db:
     driver: local
