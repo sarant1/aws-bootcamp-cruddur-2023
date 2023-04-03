@@ -14,6 +14,12 @@
       "image": "public.ecr.aws/xray/aws-xray-daemon",
       "essential": true,
       "user": "1337",
+      "healthCheck": {
+        "command": [
+          "CMD-SHELL",
+          "netstat -aun | grep 2000 > /dev/null; if [ 0 != $? ]; then exit 1; fi;"
+        ]
+      },
       "portMappings": [
         {
           "name": "x-ray",
