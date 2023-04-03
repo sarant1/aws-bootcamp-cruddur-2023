@@ -35,3 +35,21 @@ fixed: I added the permissions to the exection role and it worked (b4 I was addi
 
 - I scratched using my load balancer for two different apps as it was getting too complex.  I set it up again and ran into an error because I set fronted url to "http" and it had to be "https"
 
+
+## Security Notes
+
+- 75% high or critical vulnerabilities
+- 50% no limits defined
+- 76% are running as root (which is bad)
+
+**Problems with AWS Fargate**
+- No visibility or infrastructure
+- Ephermeral Resources makes it hard to do a traige or Forensics for detected threats
+- No file/network monitoring
+- Cannot runt raditional security agents in fargate
+- User can ru nunverified container images
+- Containers can run as root with elevated priviledges
+
+**Amazon ECR Images Security**
+- Enable scan on push to allow ecr. 
+- AWS inspector uses snyk in the background
