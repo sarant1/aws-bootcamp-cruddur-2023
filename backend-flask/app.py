@@ -131,6 +131,8 @@ def data_message_groups():
     claims = cognito_jwt_token.verify(access_token)
     # authenticated request
     cognito_user_id = claims['sub']
+    print("\033[94m=============COGNITO_USER_ID================\033[0m", flush=True)
+    print(cognito_user_id, flush=True)
     model = MessageGroups.run(cognito_user_id)
     print("MODEL---------------\n", model, flush=True)
     if model['errors'] is not None:
@@ -212,8 +214,10 @@ def data_home():
   access_token = extract_access_token(request.headers)
   try:
     claims = cognito_jwt_token.verify(access_token)
+    print("CLAIMS=================")
+    print(claims, flush=True)
     # authenticated request
-    data = HomeActivities.run(cognito_user_id=claims['username'])
+    data = HomeActivities.run(cognito_user_id=claims['preferred_username'])
   except TokenVerifyError as e:
     _ = request.data
     data = HomeActivities.run()
