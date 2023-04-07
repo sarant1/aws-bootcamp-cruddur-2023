@@ -78,7 +78,7 @@ class Ddb:
         return results
     
     def create_message(client,message_group_uuid, message, my_user_uuid, my_user_display_name, my_user_handle):
-        created_at = datetime.now().isoformat
+        created_at = datetime.now().isoformat()
         message_uuid = str(uuid.uuid4())
 
         record = {
