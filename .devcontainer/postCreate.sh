@@ -13,6 +13,12 @@ sudo dpkg -i session-manager-plugin.deb
 
 rm session-manager-plugin.deb
 
+
+sudo npm install aws-cdk -g
+
 echo $(pwd)
-./workspaces/aws-bootcamp-cruddur-2023/bin/frontend/generate-env
-./workspaces/aws-bootcamp-cruddur-2023/bin/backend/generate-env
+/workspaces/aws-bootcamp-cruddur-2023/bin/frontend/generate-env
+/workspaces/aws-bootcamp-cruddur-2023/bin/backend/generate-env
+
+
+cp /workspaces/aws-bootcamp-cruddur-2023/thumbing-serverless-cdk/.env.example /workspaces/aws-bootcamp-cruddur-2023/thumbing-serverless-cdk/.env

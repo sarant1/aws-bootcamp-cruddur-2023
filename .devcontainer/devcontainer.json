@@ -67,5 +67,5 @@
   
   "remoteUser": "bootcamp",
 
-  "postAttachCommand": "cd ./frontend-react-js && npm install && cd ../backend-flask && pip install -r requirements.txt && cd .. && ./.devcontainer/postCreate.sh"
+  "postAttachCommand": "cd ./frontend-react-js && npm i && cd ../backend-flask && pip install -r requirements.txt && cd ../thumbing-serverless-cdk && npm i && cd .. && ./.devcontainer/postCreate.sh"
 }
