@@ -224,7 +224,7 @@ def data_home():
   return data, 200
 
 @app.route("/api/activities/@<string:handle>", methods=['GET'])
-@xray_recorder.capture('activites_users')
+#@xray_recorder.capture('activites_users')
 def data_handle(handle):
   model = UserActivities.run(handle)
   if model['errors'] is not None:

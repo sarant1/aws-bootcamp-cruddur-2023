@@ -14,5 +14,5 @@ sudo dpkg -i session-manager-plugin.deb
 rm session-manager-plugin.deb
 
 echo $(pwd)
-./bin/frontend/generate-env
-./bin/backend/generate-env
+./workspaces/aws-bootcamp-cruddur-2023/bin/frontend/generate-env
+./workspaces/aws-bootcamp-cruddur-2023/bin/backend/generate-env
