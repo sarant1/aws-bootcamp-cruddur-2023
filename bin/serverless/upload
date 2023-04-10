@@ -1,0 +1,8 @@
+#! /bin/bash
+
+ABS_PATH=$(readlink -f "$0")
+FILES_PATH=$(dirname $ABS_PATH)
+PICTURE_PATH="$FILES_PATH/files/data.jpg"
+
+echo $PICTURE_PATH
+aws s3 cp "$PICTURE_PATH" "s3://assets.$DOMAIN_NAME/avatars/original/data.jpg"

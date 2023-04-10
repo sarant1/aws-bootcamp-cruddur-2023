@@ -1,1 +1,18 @@
 # Week 8 — Serverless Image Processing
+
+AWS CDK (Cloud Development Kit) IaaC
+
+kinda like CloudFormation!
+but it allows you to use any language to provision infrastrucutre!
+
+- Constructs - L1, L0 where your taking the basic cloudformation template and interacting with it directly
+    - There are different levels of constructs!
+    - Basically like building blocks of code that you can pull in to basically provision some infrastructure.
+    - L1 More primitive and customizable
+    - L3 Less customizable and more general
+
+## Debugging
+
+- I am getting this error on my /bin/serverless/upload saying that aws command not found, but I do have aws cli installed and it works when I type it manually.
+    SOLUTION: I was using PATH as a variable in my bash script which was overwritting the PATH of my aws binaries (duh...)
+
