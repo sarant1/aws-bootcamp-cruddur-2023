@@ -7,6 +7,8 @@ import ActivityFeed from '../components/ActivityFeed';
 import ActivityForm from '../components/ActivityForm';
 import ReplyForm from '../components/ReplyForm';
 import { checkAuth, getAccessToken } from '../lib/CheckAuth';
+import ProfileInfo from '../components/ProfileInfo';
+
 
 
 export default function HomeFeedPage() {
@@ -16,6 +18,7 @@ export default function HomeFeedPage() {
   const [replyActivity, setReplyActivity] = React.useState({});
   const [user, setUser] = React.useState(null);
   const dataFetchedRef = React.useRef(false);
+  const [profile, setProfile] = React.useState([]);
 
   const loadData = async () => {
     try {
@@ -64,12 +67,17 @@ export default function HomeFeedPage() {
           setActivities={setActivities} 
           activities={activities} 
         />
+        <div className="activity-feed">
+          <div className='activity_feed_heading'>
+            <div className='title'>{profile.display_name}</div>
+          </div>
         <ActivityFeed 
           title="Home" 
           setReplyActivity={setReplyActivity} 
           setPopped={setPoppedReply} 
           activities={activities} 
         />
+        </div>
       </div>
       <DesktopSidebar user={user} />
     </article>
