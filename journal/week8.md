@@ -16,3 +16,7 @@ but it allows you to use any language to provision infrastrucutre!
 - I am getting this error on my /bin/serverless/upload saying that aws command not found, but I do have aws cli installed and it works when I type it manually.
     SOLUTION: I was using PATH as a variable in my bash script which was overwritting the PATH of my aws binaries (duh...)
 - I had two spelling errors I had to change FolderInput => folderInput and BCUKET_NAME => BUCKET_NAME
+
+
+- I am getting an error props.activities.map is not a function in ActivityFeed
+    SOLUTION: FOLLOW THE VIDEO, In Implement Users Profile page I followed along a fixed the same erros andrew did.
