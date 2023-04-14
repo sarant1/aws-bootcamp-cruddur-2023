@@ -8,6 +8,7 @@ import ActivityFeed from '../components/ActivityFeed';
 import ActivityForm from '../components/ActivityForm';
 import { checkAuth, getAccessToken} from '../lib/CheckAuth';
 import ProfileHeading from '../components/ProfileHeading';
+import ProfileForm from '../components/ProfileForm';
 
 export default function UserFeedPage() {
   const [profile, setProfile] = React.useState([]);
@@ -55,9 +56,14 @@ export default function UserFeedPage() {
       <DesktopNavigation user={user} active={'profile'} setPopped={setPopped} />
       <div className='content'>
         <ActivityForm popped={popped} setActivities={setActivities} />
+        <ProfileForm 
+          profile={profile}
+          popped={poppedProfile} 
+          setPopped={setPoppedProfile} 
+        />
         <div className="activity-feed">
           <ProfileHeading setPopped={setPoppedProfile} profile={profile}/>
-          <ActivityFeed activities={activities} />
+          <ActivityFeed activities={activities} />s
         </div>
       </div>
       <DesktopSidebar user={user} />
