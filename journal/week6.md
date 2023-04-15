@@ -17,7 +17,6 @@
 - Service vs Tasks in ECS services run for ever, tasks execute and then exit
 - Always protect your APIs from the outside world!
 
-
 ## Debugging
 
 - Getting an error that ecs is not able to pull images from ecr
