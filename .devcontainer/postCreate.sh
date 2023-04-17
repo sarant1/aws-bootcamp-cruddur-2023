@@ -13,10 +13,7 @@ sudo dpkg -i session-manager-plugin.deb
 
 rm session-manager-plugin.deb
 
-
 sudo npm install aws-cdk -g
-sudo npm install -g @githubnext/github-copilot-cli
-eval "$(github-copilot-cli alias -- "$0")"
 
 echo $(pwd)
 /workspaces/aws-bootcamp-cruddur-2023/bin/frontend/generate-env
