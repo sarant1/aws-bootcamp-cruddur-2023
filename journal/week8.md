@@ -23,6 +23,7 @@ but it allows you to use any language to provision infrastrucutre!
 
 - I am getting some issues with my devcontainers local environment not port forwarding, they are forwarding to port localhost:3001 and localhost:4568 instead of the ones they are supposed to. 
     TMPSOLUTION: change docker compose ports to match new mapped ports
+    SOLUTION: It was breaking my app so I after not being able to fix I started uninstalling things and installing things.  After I uninstalled WSL and reinstalled it, things are working once again!
 
 - I was getting an error because I did schema load public.schema information into my postgres db. 
     SOLUTION: ./bin/db/schema_load

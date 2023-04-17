@@ -35,18 +35,18 @@
           "amazonwebservices.aws-toolkit-vscode",
           "GitHub.copilot"
       ]
-    }
+    },
+
+    "settings": {
+      "terminal.integrated.profiles.linux": {
+        "bash": {
+          "path": "/usr/bin/bash",
+          "icon": "terminal-bash"
+        }
+      },
+      "terminal.integrated.defaultProfile.linux": "bash"
+    }	
   },     
-  
-  "settings": {
-		"terminal.integrated.profiles.linux": {
-			"bash": {
-				"path": "/usr/bin/bash",
-				"icon": "terminal-bash"
-			}
-		},
-		"terminal.integrated.defaultProfile.linux": "bash"
-	},	
   
   "containerEnv": {
     "AWS_ACCESS_KEY_ID":      "${localEnv:AWS_ACCESS_KEY_ID}",

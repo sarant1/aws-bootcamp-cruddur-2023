@@ -225,8 +225,11 @@ def data_home():
 
 @app.route("/api/activities/@<string:handle>", methods=['GET'])
 #@xray_recorder.capture('activites_users')
+
+
+#### PASSING samuelarant as handle for now 
 def data_handle(handle):
-  model = UserActivities.run(handle)
+  model = UserActivities.run('samuelarant')
   if model['errors'] is not None:
     return model['errors'], 422
   else:
@@ -246,7 +249,7 @@ def data_search():
 @cross_origin()
 def data_activities():
   print(request, flush=True)
-  user_handle  = 'andrewbrown'
+  user_handle  = 'samuelarant'
   message = request.json['message']
   ttl = request.json['ttl']
   model = CreateActivity.run(message, user_handle, ttl)
@@ -272,7 +275,7 @@ def data_users_short(handle):
 @app.route("/api/activities/<string:activity_uuid>/reply", methods=['POST','OPTIONS'])
 @cross_origin()
 def data_activities_reply(activity_uuid):
-  user_handle  = 'andrewbrown'
+  user_handle  = 'samuelarant'
   message = request.json['message']
   model = CreateReply.run(message, user_handle, activity_uuid)
   
