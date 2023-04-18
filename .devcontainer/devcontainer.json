@@ -4,6 +4,7 @@
 
   "features": {
     "ghcr.io/devcontainers/features/docker-in-docker:2": {}
+    // "ghcr.io/devcontainers/features/ruby:1": {}
   },
 
   "forwardPorts": [3000, 4567, 2000],
