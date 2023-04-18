@@ -63,7 +63,9 @@
     "DB_SG_ID": "${localEnv:DB_SG_ID}",
     "DB_SG_RULE_ID": "${localEnv:DB_SG_RULE_ID}",
     "AWS_COGNITO_USER_POOL_ID": "${localEnv:AWS_COGNITO_USER_POOL_ID}",
-    "DOMAIN_NAME": "${localEnv:DOMAIN_NAME}"
+    "DOMAIN_NAME": "${localEnv:DOMAIN_NAME}",
+    "UPLOADS_BUCKET_NAME": "${localEnv:UPLOADS_BUCKET_NAME}"
+
   },
   
   "remoteUser": "bootcamp",
