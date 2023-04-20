@@ -54,7 +54,7 @@ export default function UserFeedPage() {
   return (
     <article>
       <DesktopNavigation user={user} active={'profile'} setPopped={setPopped} />
-      <div className='content'>
+      <div className="content">
         <ActivityForm popped={popped} setActivities={setActivities} />
         <ProfileForm 
           profile={profile}
@@ -63,7 +63,7 @@ export default function UserFeedPage() {
         />
         <div className="activity-feed">
           <ProfileHeading setPopped={setPoppedProfile} profile={profile}/>
-          <ActivityFeed activities={activities} />s
+          <ActivityFeed activities={activities} />
         </div>
       </div>
       <DesktopSidebar user={user} />

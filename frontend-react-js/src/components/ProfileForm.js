@@ -12,6 +12,23 @@ export default function ProfileForm(props) {
     setDisplayName(props.profile.display_name);
   }, [props.profile])
 
+  async function testGetKey() {
+    console.log("TESTING....")
+    const gateway_url = `${process.env.REACT_APP_API_GATEWAY_ENDPOINT_URL}/avatars/key_upload`
+    const access_token = await getAccessToken()
+    const res = await fetch(gateway_url, {
+      method: "POST",
+      headers: {
+        'Origin': process.env.REACT_APP_FRONTEND_URL,
+        'Authorization': `Bearer ${access_token}`,
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      }
+    })
+    let data = await res.json();
+    console.log(data)
+  }
+
   const s3uploadkey = async (extension)=> {
     console.log('ext',extension)
     try {
@@ -51,6 +68,7 @@ export default function ProfileForm(props) {
     const fileparts = filename.split('.')
     const extension = fileparts[fileparts.length-1]
     const presignedurl = await s3uploadkey(extension)
+    console.log('presignedURL',presignedurl)
     try {
       console.log('s3upload')
       const res = await fetch(presignedurl, {
@@ -147,6 +165,7 @@ export default function ProfileForm(props) {
                 onChange={bio_onchange} 
               />
             </div>
+            <button onClick={testGetKey}>getKey</button>
           </div>
         </form>
       </div>
