@@ -4,6 +4,7 @@
 
   "features": {
     "ghcr.io/devcontainers/features/docker-in-docker:2": {}
+    // "ghcr.io/devcontainers/features/ruby:1": {}
   },
 
   "forwardPorts": [3000, 4567, 2000],
@@ -35,18 +36,18 @@
           "amazonwebservices.aws-toolkit-vscode",
           "GitHub.copilot"
       ]
-    }
+    },
+
+    "settings": {
+      "terminal.integrated.profiles.linux": {
+        "bash": {
+          "path": "/usr/bin/bash",
+          "icon": "terminal-bash"
+        }
+      },
+      "terminal.integrated.defaultProfile.linux": "bash"
+    }	
   },     
-  
-  "settings": {
-		"terminal.integrated.profiles.linux": {
-			"bash": {
-				"path": "/usr/bin/bash",
-				"icon": "terminal-bash"
-			}
-		},
-		"terminal.integrated.defaultProfile.linux": "bash"
-	},	
   
   "containerEnv": {
     "AWS_ACCESS_KEY_ID":      "${localEnv:AWS_ACCESS_KEY_ID}",
@@ -63,7 +64,9 @@
     "DB_SG_ID": "${localEnv:DB_SG_ID}",
     "DB_SG_RULE_ID": "${localEnv:DB_SG_RULE_ID}",
     "AWS_COGNITO_USER_POOL_ID": "${localEnv:AWS_COGNITO_USER_POOL_ID}",
-    "DOMAIN_NAME": "${localEnv:DOMAIN_NAME}"
+    "DOMAIN_NAME": "${localEnv:DOMAIN_NAME}",
+    "UPLOADS_BUCKET_NAME": "${localEnv:UPLOADS_BUCKET_NAME}"
+
   },
   
   "remoteUser": "bootcamp",

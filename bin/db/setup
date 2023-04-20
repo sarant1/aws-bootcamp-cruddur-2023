@@ -13,7 +13,6 @@ bin_path=$(dirname $DB_PATH)
 
 echo $bin_path
 
-
 source "$bin_path/db/drop"
 source "$bin_path/db/create"
 source "$bin_path/db/schema-load"

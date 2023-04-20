@@ -4,7 +4,7 @@ import { Auth } from 'aws-amplify';
 export const getAccessToken = async () => {
   try {
     const cognito_user = await Auth.currentSession();
-    const access_token = cognito_user.idToken.jwtToken;
+    const access_token = cognito_user.accessToken.jwtToken;
     localStorage.setItem('access_token', access_token);
     return access_token;
   } catch (err) {
@@ -21,14 +21,14 @@ export const checkAuth = async (setUser) => {
       bypassCache: false 
     })
     .then((cognito_user) => {
-      console.log('cognito_user', cognito_user);
+      console.log('ccccc', cognito_user)
       setUser({
+        cognito_user_id: cognito_user.attributes.sub,
         display_name: cognito_user.attributes.name,
         handle: cognito_user.attributes.preferred_username
       })
       return Auth.currentSession()
     }).then((cognito_user_session) => {
-      console.log('cognito_user_session',cognito_user_session)
       localStorage.setItem("access_token", cognito_user_session.accessToken.jwtToken)
     })
     .catch((err) => console.log(err));

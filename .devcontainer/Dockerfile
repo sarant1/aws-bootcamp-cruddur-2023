@@ -45,15 +45,6 @@ ENV LANG=en_US.UTF-8
 RUN cd /tmp \
     && curl -fsSL https://deb.nodesource.com/setup_19.x | sudo -E bash \    
     && apt install -y nodejs
-
-# Install Docker
-# RUN sudo mkdir -m 0755 -p /etc/apt/keyrings \
-#     && curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg \
-#     && echo \
-#   "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \
-#   $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null \
-#   && apt update \
-#   && apt install -yq docker-ce
  
 # Install AWS CLI tool then cleanup
 RUN cd /tmp \
@@ -71,7 +62,7 @@ RUN curl -fsSL https://www.postgresql.org/media/keys/ACCC4CF8.asc|sudo gpg --dea
 
 # Set up user bootcamp
 ARG USERNAME=bootcamp
-ARG USER_UID=1000
+ARG USER_UID=2000
 ARG USER_GID=$USER_UID
 RUN groupadd --gid $USER_GID $USERNAME \
     && useradd --uid $USER_UID --gid $USER_GID -m $USERNAME \
@@ -83,13 +74,5 @@ USER $USERNAME
 RUN sudo apt update \
     && sudo apt upgrade -yq \
     && sudo apt autoremove -y
-
-# # Install GitHub CLI
-# RUN type -p curl >/dev/null || (sudo apt update && sudo apt install curl -y)
-# RUN curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | sudo dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg \
-# && sudo chmod go+r /usr/share/keyrings/githubcli-archive-keyring.gpg \
-# && echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | sudo tee /etc/apt/sources.list.d/github-cli.list > /dev/null \
-# && sudo apt update \
-# && sudo apt install gh -y
 
 ENV SHELL /bin/bash

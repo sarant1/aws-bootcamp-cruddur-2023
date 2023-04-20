@@ -9,7 +9,8 @@ CREATE TABLE public.users (
   handle text,
   email text,
   cognito_user_id text,
-  created_at TIMESTAMP default current_timestamp NOT NULL
+  created_at TIMESTAMP default current_timestamp NOT NULL,
+  bio text
 );
 
 CREATE TABLE public.activities (
@@ -23,3 +24,12 @@ CREATE TABLE public.activities (
   expires_at TIMESTAMP,
   created_at TIMESTAMP default current_timestamp NOT NULL
 );
+
+CREATE TABLE IF NOT EXISTS public.schema_information (
+  id integer UNIQUE,
+  last_successful_run text
+);
+
+INSERT INTO public.schema_information (id,last_successful_run)
+VALUES(1,'0')
+ON CONFLICT (id) DO NOTHING;
