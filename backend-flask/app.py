@@ -217,7 +217,7 @@ def data_home():
     print("CLAIMS=================")
     print(claims, flush=True)
     # authenticated request
-    data = HomeActivities.run(cognito_user_id=claims['preferred_username'])
+    data = HomeActivities.run(cognito_user_id=claims['username'])
   except TokenVerifyError as e:
     _ = request.data
     data = HomeActivities.run()

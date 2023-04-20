@@ -27,3 +27,16 @@ but it allows you to use any language to provision infrastrucutre!
 
 - I was getting an error because I did schema load public.schema information into my postgres db. 
     SOLUTION: ./bin/db/schema_load
+
+
+- I was getting an error because I didnt remove the space from the access token to remove Bearer from it.
+    SOLUTION:
+    ```
+    const jwt = event.headers.authorization.replace('Bearer ', '');
+    ```
+- Another issue I was getting with the lambda authorizer was becuase I was setting the idToken in the checkAuth function and not the accessToken.  So it was confusing the lambda funciton I changed
+
+    SOLUTION:
+    ```
+    const access_token = cognito_user.idToken.jwtToken; => const access_token = cognito_user.accessToken.jwtToken;
+    ```
