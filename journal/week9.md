@@ -29,3 +29,4 @@ Security
 
 - Access Control for IAM roles.
 - Security of endpoints of the CI/CD pipeline ( are there any public endpoints that are vulnerable ? )
+- Production should have no manual changes in CI/CD 
