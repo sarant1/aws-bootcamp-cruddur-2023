@@ -20,4 +20,8 @@ echo $(pwd)
 /workspaces/aws-bootcamp-cruddur-2023/bin/backend/generate-env
 
 
+
+# Install Cfn-lint
+pip install cfn-lint
+
 cp /workspaces/aws-bootcamp-cruddur-2023/thumbing-serverless-cdk/.env.example /workspaces/aws-bootcamp-cruddur-2023/thumbing-serverless-cdk/.env

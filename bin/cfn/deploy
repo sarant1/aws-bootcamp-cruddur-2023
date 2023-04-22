@@ -1,0 +1,15 @@
+#! /bin/bash
+
+set -e # stop execution if anything fails
+
+
+CFN_PATH="/workspaces/aws-bootcamp-cruddur-2023/aws/cfn/template.yaml"
+
+cfn-lint $CFN_PATH
+
+aws cloudformation deploy \
+    --stack-name "my-cluster" \
+    --s3-bucket "cfn-artifacts-sda" \
+    --template-file $CFN_PATH \
+    --no-execute-changeset \
+    --capabilities CAPABILITY_NAMED_IAM
