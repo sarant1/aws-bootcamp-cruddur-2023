@@ -1,6 +1,19 @@
 AWSTemplateFormatVersion: 2010-09-09
 
 Parameters:
+  VpcCidrBlocks:
+    Type: String
+    Default: 10.0.0.0/16
+  SubnetCidrBlocks:
+    Description: "comma-delimted list of our cidr blocks for our subnets"
+    Type: CommaDelimitedList
+    Default: >
+      10.0.0.0/24, 
+      10.0.4.0/24, 
+      10.0.8.0/24, 
+      10.0.12.0/24, 
+      10.0.16.0/24, 
+      10.0.20.0/24
   Az1:
     Type: AWS::EC2::AvailabilityZone::Name
     Default: us-east-1a
@@ -16,14 +29,14 @@ Resources:
   # https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-vpc.html
     Type: AWS::EC2::VPC
     Properties: 
-      CidrBlock: 10.0.0.0/16
+      CidrBlock: !Ref VpcCidrBlocks
       EnableDnsHostnames: true
       EnableDnsSupport: true
       InstanceTenancy: default
       Tags:
         - Key: Name
-          Value: CruddurVPC
-
+          Value: !Sub "${AWS::StackName}VPC"
+ 
 # IGW
 # https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-internetgateway.html
   IGW:
@@ -31,7 +44,7 @@ Resources:
     Properties:
       Tags:
         - Key: Name
-          Value: CruddurIGW
+          Value: !Sub "${AWS::StackName}IGW"
 # VPC Attach Gateway
 # https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-vpc-gateway-attachment.html
   AttachIGW:
@@ -48,7 +61,7 @@ Resources:
       VpcId: !Ref VPC
       Tags:
         - Key: Name
-          Value: CruddurRT
+          Value: !Sub "${AWS::StackName}RT"
 
   RouteToIGW:
   # https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-route.html
@@ -69,61 +82,61 @@ Resources:
     Properties:
       MapPublicIpOnLaunch: true # Public Subnet 
       VpcId: !Ref VPC
-      CidrBlock: 10.0.0.0/24
+      CidrBlock: !Select [0, !Ref SubnetCidrBlocks]
       AvailabilityZone: !Ref Az1
       Tags:
         - Key: Name
-          Value: CruddurPubSubnet1
+          Value: !Sub "${AWS::StackName}PubSubnet1"
   PubSubnet2:
     Type: AWS::EC2::Subnet
     Properties:
       MapPublicIpOnLaunch: true # Public Subnet 
       VpcId: !Ref VPC
-      CidrBlock: 10.0.4.0/24
+      CidrBlock: !Select [1, !Ref SubnetCidrBlocks]
       AvailabilityZone: !Ref Az2
       Tags:
         - Key: Name
-          Value: CruddurPubSubnet2
+          Value: !Sub "${AWS::StackName}PubSubnet2"
   PubSubnet3:
     Type: AWS::EC2::Subnet
     Properties:
       MapPublicIpOnLaunch: true # Public Subnet 
       VpcId: !Ref VPC
-      CidrBlock: 10.0.8.0/24
+      CidrBlock: !Select [2, !Ref SubnetCidrBlocks]
       AvailabilityZone: !Ref Az3
       Tags:
         - Key: Name
-          Value: CruddurPubSubnet3
+          Value: !Sub "${AWS::StackName}PubSubnet3"
   PrivSubnet1:
     Type: AWS::EC2::Subnet
     Properties:
       MapPublicIpOnLaunch: false # Public Subnet 
       VpcId: !Ref VPC
-      CidrBlock: 10.0.16.0/24
+      CidrBlock: !Select [3, !Ref SubnetCidrBlocks]
       AvailabilityZone: !Ref Az1
       Tags:
         - Key: Name
-          Value: CruddurPrivSubnet1
+          Value: !Sub "${AWS::StackName}PrivSubnet1"
   PrivSubnet2:
     Type: AWS::EC2::Subnet
     Properties:
       MapPublicIpOnLaunch: false # Public Subnet 
       VpcId: !Ref VPC
-      CidrBlock: 10.0.20.0/24
+      CidrBlock: !Select [4, !Ref SubnetCidrBlocks]
       AvailabilityZone: !Ref Az2
       Tags:
         - Key: Name
-          Value: CruddurPrivSubnet2
+          Value: !Sub "${AWS::StackName}PrivSubnet2"
   PrivSubnet3:
     Type: AWS::EC2::Subnet
     Properties:
       MapPublicIpOnLaunch: false # Public Subnet 
       VpcId: !Ref VPC
-      CidrBlock: 10.0.24.0/24
+      CidrBlock: !Select [5, !Ref SubnetCidrBlocks]
       AvailabilityZone: !Ref Az3
       Tags:
         - Key: Name
-          Value: CruddurPrivSubnet3
+          Value: !Sub "${AWS::StackName}PrivSubnet3"
 
   PubSubnetRTAssociation1:
     Type: AWS::EC2::SubnetRouteTableAssociation
@@ -160,3 +173,35 @@ Resources:
       SubnetId: !Ref PrivSubnet3
       RouteTableId: !Ref RouteTable
 
+Outputs:
+  VpcId:
+    Value: !Ref VPC
+    Export:
+      Name: VpcId
+  VpcCidrBlock:
+    Value: !GetAtt VPC.CidrBlock
+    Export:
+      Name: VpcCidrBlock
+  SubnetCidrBlocks:
+    Value: !Join [",", !Ref SubnetCidrBlocks]
+    Export:
+      Name: SubnetCidrBlocks
+  SubnetIds:
+    Value: !Join 
+      - ","
+      - - !Ref PubSubnet1
+        - !Ref PubSubnet2
+        - !Ref PubSubnet3
+        - !Ref PrivSubnet1
+        - !Ref PrivSubnet2
+        - !Ref PrivSubnet3
+    Export:
+      Name: SubnetIds
+  AvailabilityZones:
+    Value: !Join
+      - ","
+      - - !Ref Az1
+        - !Ref Az2
+        - !Ref Az3
+    Export:
+      Name: AvailabilityZones
