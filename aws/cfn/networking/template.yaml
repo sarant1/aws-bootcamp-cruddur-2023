@@ -1,4 +1,17 @@
 AWSTemplateFormatVersion: 2010-09-09
+Description: |
+  The base networking components for our VPC
+  - VPC
+    - set DNS hostnames for EC2 instances
+    - Only IPV4, IPV6 is disabled
+  - Internet Gateway
+  - Route Table
+    - Route to IGW
+    - Route to local
+  - 6 Subnets Explicity Asscoiated to Route Table
+    - 3 Public Subnets 1 to 3
+    - 3 Private Subnets 1 to 3
+
 
 Parameters:
   VpcCidrBlocks:

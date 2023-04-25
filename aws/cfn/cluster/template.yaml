@@ -1,0 +1,47 @@
+AWSTemplateFormatVersion: 2010-09-09
+
+Parameters:
+  ClusterName:
+    Type: String
+    Default: MyCluster
+    Description: Name of the ECS Cluster
+Resources:
+  FargateCluster: # Logical Name
+  # https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ecs-cluster.html
+    Type: 'AWS::ECS::Cluster'
+    Properties:
+      ClusterName: !Sub ${AWS::StackName}FargateCluster
+      CapacityProviders:
+        - FARGATE
+      ClusterSettings:
+        - Name: containerInsights
+          Value: enabled
+      Configuration:
+        ExecuteCommandConfiguration:
+          # KmsKeyId: !Ref KmsKeyId
+          Logging: DEFAULT
+      ServiceConnectDefaults:
+        Namespace: cruddur
+  ALB:
+    # https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-elasticloadbalancingv2-loadbalancer.html
+    Type: AWS::ElasticLoadBalancingV2::LoadBalancer
+    Properties:
+      Name: !Sub ${AWS::StackName}ALB
+      IpAddressType: ipv4
+      LoadBalancerAttributes:
+        - Name: routing.http2.enabled
+          Value: true
+        - Name: routing.http.preserve_host_header.enabled
+          Value: false
+        - Name: deletion_protection.enabled
+          Value: true
+        - Name: load_balancing.cross_zone.enabled
+          Value: true
+      Scheme: internet-facing
+      Subnets:
+        - !Ref PublicSubnet1
+        - !Ref PublicSubnet2
+        - !Ref PublicSubnet3
+      SecurityGroups:
+        - !Ref ALBSecurityGroup
+Outputs:
