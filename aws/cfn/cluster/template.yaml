@@ -1,10 +1,72 @@
 AWSTemplateFormatVersion: 2010-09-09
 
+Description: |
+  The networking and cluster configuration to support fargate contianers
+  - ECS Cluster
+  - Apllication Load Balancer
+    - internet facing
+    - ipv4
+  - ALB security group
+  - Https listender
+    - Send naked domain to frontend target group
+    - send api subdomain to backend target group
+  - Http Listener
+    - redirects to https
+  - Backend Target Group
+  - Frontend target group
 Parameters:
+  NetworkingStack:
+    Type: String
+    Description: This our base layer of networking component
   ClusterName:
     Type: String
     Default: MyCluster
     Description: Name of the ECS Cluster
+  CertificateArn:
+    Type: String
+  FrontendContainerPort:
+    Type: Number
+    Default: 3000
+  BackendContainerPort:
+    Type: Number
+    Default: 4567
+
+  # Frontend Health Check Config
+
+  FrontendHealthCheckIntervalSeconds: 
+    Type: Number
+    Default: 20
+  FrontendHealthCheckPath:
+    Type: String
+    Default: "/"
+  FrontendHealthCheckTimeoutSeconds: 
+    Type: Number
+    Default: 5
+  FrontendHealthyThresholdCount:
+    Type: Number
+    Defaut: 2
+  FrontendUnhealthyThresholdCount:
+    Type: Number
+    Default: 2
+
+
+  # Backend Health Check Config 
+
+  BackendHealthCheckIntervalSeconds:
+    Type: Number
+    Default: 20
+  BackendHealthCheckPath:
+    Type: String
+    Default: "/api/health-check"
+  BackendHealthCheckTimeoutSeconds:
+    Type: Number
+    Default: 5
+  BackendHealthyThresholdCount:
+    Type: Number
+    Default: 2
+  BackendUnhealthyThresholdCount:
+    Type: Number
+    Default: 2
 Resources:
   FargateCluster: # Logical Name
   # https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ecs-cluster.html
@@ -27,7 +89,15 @@ Resources:
     Type: AWS::ElasticLoadBalancingV2::LoadBalancer
     Properties:
       Name: !Sub ${AWS::StackName}ALB
+      Type: application
       IpAddressType: ipv4
+      Scheme: internet-facing
+      Subnets:
+        - !Ref PublicSubnet1
+        - !Ref PublicSubnet2
+        - !Ref PublicSubnet3
+      SecurityGroups:
+        - !Ref ALBSG
       LoadBalancerAttributes:
         - Name: routing.http2.enabled
           Value: true
@@ -37,11 +107,118 @@ Resources:
           Value: true
         - Name: load_balancing.cross_zone.enabled
           Value: true
-      Scheme: internet-facing
-      Subnets:
-        - !Ref PublicSubnet1
-        - !Ref PublicSubnet2
-        - !Ref PublicSubnet3
-      SecurityGroups:
-        - !Ref ALBSecurityGroup
+        # - Name: access_logs.s3.bucket
+        #   Value: bucket-name
+        # - Name: access_logs.s3.prefix
+        #   Value: ""
+  HTTPSListener:
+  # https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-elasticloadbalancingv2-listener.html
+    Type: AWS::ElasticLoadBalancingV2::Listener
+    Properties:
+      Certificates:
+        - CertificateArn: !Ref
+      DefaultActions:
+        - Type: Forward
+          TargetGroupArn: !Ref FrontendTG
+      LoadBalancerArn: !Ref ALB
+      Port: 443
+  HTTPListener:
+  # 
+    Type: AWS::ElasticLoadBalancingV2::Listener
+    Properties:
+      Protocol: HTTP
+      Port: 80
+      LoadBalancerArn: !Ref ALB
+      DefaultActions:
+        - Type: redirect
+          RedirectConfig:
+            Protocol: "HTTPS"
+            Port: 443
+            Host: "#{host}"
+            Path: "#{Path}"
+            Query: "#{query}"
+            StatusCode: "HTTP_301"
+  ALBSG:
+  # https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-security-group.html
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupName: !Sub "${AWS::StackName}AlbSG"
+      GroupDescription: Allow Ingress Traffic from the internet
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 443
+          ToPort: 443
+          CidrIp: '0.0.0.0/0'
+          Description: INTERNET HTTPS
+        - IpProtocol: tcp
+          FromPort: 80
+          ToPort: 80
+          CidrIp: '0.0.0.0/0'
+          Description: INTERNET HTTP
+  ApiALBListenerRule:
+  # https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-elasticloadbalancingv2-listenerrule.html
+    Type: AWS::ElasticLoadBalancingV2::ListenerRule
+    Properties:
+      Conditions:
+        - Field: "host-header"
+          HostHeaderConfig:
+          Values:
+            - api.sudosam.com
+      Actions:
+        - Action
+        - Type: forward
+          TargetGroupArn: !Ref BackendTG
+      ListenerArn: !Ref HTTPSListener
+      Priority: 1
+  BackendTG:
+  # https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-elasticloadbalancingv2-targetgroup.html
+    Type: AWS::ElasticLoadBalancingV2::TargetGroup
+    Properties:
+      Name: !Sub "${AWS::StackName}BackendTG"
+      HealthCheckEnabled: true
+      HealthCheckIntervalSeconds: !Ref BackendHealthCheckIntervalSeconds
+      HealthCheckPath: !Ref BackendHealthCheckPath
+      HealthCheckProtocol: HTTP
+      HealthCheckTimeoutSeconds: !Ref BackendHealthCheckTimeoutSeconds
+      HealthyThresholdCount: !Ref BackendHealthyThresholdCount
+      UnhealthyThresholdCount: !Ref BackendUnhealthyThresholdCount
+      IpAddressType: ipv4
+      Matcher: 
+        HttpCode: 200
+      Port: !Ref BackendContainerPort
+      Protocol: HTTP
+      ProtocolVersion: HTTP2
+      TargetGroupAttributes: 
+        - Key: deregistration_delay.timeout_seconds
+          Value: 0
+      VpcId:
+        Fn::ImportValue:
+          !Sub ${NetworkingStack}VpcId
+
+
+  FrontendTG:
+  # https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-elasticloadbalancingv2-targetgroup.html
+    Type: AWS::ElasticLoadBalancingV2::TargetGroup
+    Properties:
+      Name: !Sub "${AWS::StackName}FrontendTG"
+      Port: !Ref FrontendContainerPort
+      HealthCheckEnabled: true
+      HealthCheckProtocol: HTTP
+      HealthCheckIntervalSeconds: !Ref FrontendHealthCheckIntervalSeconds
+      HealthCheckPath: !Ref FrontendHealthCheckPath
+      HealthCheckTimeoutSeconds: !Ref FrontendHealthCheckTimeoutSeconds
+      HealthyThresholdCount: !Ref FrontendHealthyThresholdCount
+      UnhealthyThresholdCount: !Ref FrontendUnhealthyThresholdCount
+      IpAddressType: ipv4
+      Matcher: 
+        HttpCode: 200
+      Protocol: HTTP
+      ProtocolVersion: HTTP2
+      TargetGroupAttributes: 
+        - Key: deregistration_delay.timeout_seconds
+          Value: 0
+      VpcId: String
+
+
+      
 Outputs:
