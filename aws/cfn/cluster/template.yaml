@@ -1,5 +1,4 @@
 AWSTemplateFormatVersion: 2010-09-09
-
 Description: |
   The networking and cluster configuration to support fargate contianers
   - ECS Cluster
@@ -18,10 +17,7 @@ Parameters:
   NetworkingStack:
     Type: String
     Description: This our base layer of networking component
-  ClusterName:
-    Type: String
-    Default: MyCluster
-    Description: Name of the ECS Cluster
+    Default: CrdNet
   CertificateArn:
     Type: String
   FrontendContainerPort:
@@ -44,7 +40,7 @@ Parameters:
     Default: 5
   FrontendHealthyThresholdCount:
     Type: Number
-    Defaut: 2
+    Default: 2
   FrontendUnhealthyThresholdCount:
     Type: Number
     Default: 2
@@ -92,20 +88,21 @@ Resources:
       Type: application
       IpAddressType: ipv4
       Scheme: internet-facing
-      Subnets:
-        - !Ref PublicSubnet1
-        - !Ref PublicSubnet2
-        - !Ref PublicSubnet3
       SecurityGroups:
         - !Ref ALBSG
+      Subnets:
+        Fn::Split:
+          - ","
+          - Fn::ImportValue:
+              !Sub "${NetworkingStack}SubnetIds"
       LoadBalancerAttributes:
-        - Name: routing.http2.enabled
+        - Key: routing.http2.enabled
           Value: true
-        - Name: routing.http.preserve_host_header.enabled
+        - Key: routing.http.preserve_host_header.enabled
           Value: false
-        - Name: deletion_protection.enabled
+        - Key: deletion_protection.enabled
           Value: true
-        - Name: load_balancing.cross_zone.enabled
+        - Key: load_balancing.cross_zone.enabled
           Value: true
         # - Name: access_logs.s3.bucket
         #   Value: bucket-name
@@ -116,7 +113,7 @@ Resources:
     Type: AWS::ElasticLoadBalancingV2::Listener
     Properties:
       Certificates:
-        - CertificateArn: !Ref
+        - CertificateArn: !Ref CertificateArn
       DefaultActions:
         - Type: Forward
           TargetGroupArn: !Ref FrontendTG
@@ -133,7 +130,7 @@ Resources:
         - Type: redirect
           RedirectConfig:
             Protocol: "HTTPS"
-            Port: 443
+            Port: "443"
             Host: "#{host}"
             Path: "#{Path}"
             Query: "#{query}"
@@ -162,10 +159,9 @@ Resources:
       Conditions:
         - Field: "host-header"
           HostHeaderConfig:
-          Values:
-            - api.sudosam.com
+            Values:
+              - api.sudosam.com
       Actions:
-        - Action
         - Type: forward
           TargetGroupArn: !Ref BackendTG
       ListenerArn: !Ref HTTPSListener
@@ -217,7 +213,9 @@ Resources:
       TargetGroupAttributes: 
         - Key: deregistration_delay.timeout_seconds
           Value: 0
-      VpcId: String
+      VpcId:
+        Fn::ImportValue:
+          !Sub ${NetworkingStack}VpcId
 
 
       
