@@ -215,8 +215,5 @@ Resources:
           Value: 0
       VpcId:
         Fn::ImportValue:
-          !Sub ${NetworkingStack}VpcId
+          !Sub "${NetworkingStack}VpcId"
 
-
-      
-Outputs:

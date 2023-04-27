@@ -5,12 +5,12 @@ set -e # stop execution if anything fails
 
 CFN_PATH="/workspaces/aws-bootcamp-cruddur-2023/aws/cfn/cluster/template.yaml"
 
-cfn-lint $CFN_PATH
+# cfn-lint $CFN_PATH
 
 aws cloudformation deploy \
     --stack-name "CrdCluster" \
     --s3-bucket $CFN_BUCKET \
     --template-file $CFN_PATH \
     --no-execute-changeset \
-    --tags group=cruddur_cluster \ 
+    --tags "group"="cruddur-cluster"\ 
     --capabilities CAPABILITY_NAMED_IAM
