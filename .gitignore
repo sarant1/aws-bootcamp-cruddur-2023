@@ -3,3 +3,4 @@ frontend-react-js/build/*
 *.env
 *.deb
 node_modules
+*.toml

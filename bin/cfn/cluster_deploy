@@ -4,13 +4,21 @@ set -e # stop execution if anything fails
 
 
 CFN_PATH="/workspaces/aws-bootcamp-cruddur-2023/aws/cfn/cluster/template.yaml"
+CONFIG_PATH="/workspaces/aws-bootcamp-cruddur-2023/aws/cfn/cluster/config.toml.example"
+cfn-lint $CFN_PATH
 
-# cfn-lint $CFN_PATH
+BUCKET=$(cfn-toml key deploy.bucket -t $CONFIG_PATH)
+REGION=$(cfn-toml key deploy.region -t $CONFIG_PATH)
+STACK_NAME=$(cfn-toml key deploy.stack_name -t $CONFIG_PATH)
+PARAMETERS=$(cfn-toml params v2 -t $CONFIG_PATH)
+
 
 aws cloudformation deploy \
-    --stack-name "CrdCluster" \
-    --s3-bucket $CFN_BUCKET \
+    --stack-name $STACK_NAME \
+    --s3-bucket $BUCKET \
+    --region $REGION \
+    --parameter-overrides $PARAMETERS \
     --template-file $CFN_PATH \
     --no-execute-changeset \
-    --tags "group"="cruddur-cluster"\ 
+    --tags group=cruddur-cluster \
     --capabilities CAPABILITY_NAMED_IAM

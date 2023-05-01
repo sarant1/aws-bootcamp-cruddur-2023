@@ -24,4 +24,10 @@ echo $(pwd)
 # Install Cfn-lint
 pip install cfn-lint
 
+# Install cfn toml
+gem install cfn-toml
+
+# Set path to include cfn-lint
+export PATH=$PATH:/home/bootcamp/.local/bin
+
 cp /workspaces/aws-bootcamp-cruddur-2023/thumbing-serverless-cdk/.env.example /workspaces/aws-bootcamp-cruddur-2023/thumbing-serverless-cdk/.env
