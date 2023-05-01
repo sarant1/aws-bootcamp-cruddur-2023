@@ -14,3 +14,9 @@ Getting these erros with cloudformation
 
 
 ![Errors](./assets/CFNClusterErrors.jpg)
+
+
+I fixed it but I forget what the problem was :/
+
+
+- I was misconfigured my ALB listeners so I had to fix some spelling mistakes Forward => forward & HTTPS => HTTP (for HTTP listener)

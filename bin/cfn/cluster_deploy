@@ -4,7 +4,7 @@ set -e # stop execution if anything fails
 
 
 CFN_PATH="/workspaces/aws-bootcamp-cruddur-2023/aws/cfn/cluster/template.yaml"
-CONFIG_PATH="/workspaces/aws-bootcamp-cruddur-2023/aws/cfn/cluster/config.toml.example"
+CONFIG_PATH="/workspaces/aws-bootcamp-cruddur-2023/aws/cfn/cluster/config.toml"
 cfn-lint $CFN_PATH
 
 BUCKET=$(cfn-toml key deploy.bucket -t $CONFIG_PATH)

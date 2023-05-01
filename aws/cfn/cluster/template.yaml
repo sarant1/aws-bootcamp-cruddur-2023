@@ -5,6 +5,7 @@ Description: |
   - Apllication Load Balancer
     - internet facing
     - ipv4
+    - certificate attached from ACM via toml with arn
   - ALB security group
   - Https listender
     - Send naked domain to frontend target group
@@ -89,19 +90,19 @@ Resources:
       IpAddressType: ipv4
       Scheme: internet-facing
       SecurityGroups:
-        - !Ref ALBSG
+        - !GetAtt ALBSG.GroupId
       Subnets:
         Fn::Split:
           - ","
           - Fn::ImportValue:
-              !Sub "${NetworkingStack}SubnetIds"
+              !Sub "${NetworkingStack}PubSubnetIds"
       LoadBalancerAttributes:
         - Key: routing.http2.enabled
           Value: true
         - Key: routing.http.preserve_host_header.enabled
           Value: false
         - Key: deletion_protection.enabled
-          Value: true
+          Value: false
         - Key: load_balancing.cross_zone.enabled
           Value: true
         # - Name: access_logs.s3.bucket
@@ -112,10 +113,11 @@ Resources:
   # https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-elasticloadbalancingv2-listener.html
     Type: AWS::ElasticLoadBalancingV2::Listener
     Properties:
+      Protocol: HTTPS
       Certificates:
         - CertificateArn: !Ref CertificateArn
       DefaultActions:
-        - Type: Forward
+        - Type: forward
           TargetGroupArn: !Ref FrontendTG
       LoadBalancerArn: !Ref ALB
       Port: 443
@@ -132,7 +134,7 @@ Resources:
             Protocol: "HTTPS"
             Port: "443"
             Host: "#{host}"
-            Path: "#{Path}"
+            Path: "/#{path}"
             Query: "#{query}"
             StatusCode: "HTTP_301"
   ALBSG:
@@ -141,6 +143,9 @@ Resources:
     Properties:
       GroupName: !Sub "${AWS::StackName}AlbSG"
       GroupDescription: Allow Ingress Traffic from the internet
+      VpcId:
+        Fn::ImportValue:
+          !Sub "${NetworkingStack}VpcId"
       SecurityGroupIngress:
         - IpProtocol: tcp
           FromPort: 443
@@ -189,7 +194,7 @@ Resources:
           Value: 0
       VpcId:
         Fn::ImportValue:
-          !Sub ${NetworkingStack}VpcId
+          !Sub "${NetworkingStack}VpcId"
 
 
   FrontendTG:
