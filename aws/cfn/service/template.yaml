@@ -1,0 +1,71 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: |
+  Task definition file
+  Fargate Service
+  Execution Role
+  Task Role
+Parameters:
+  NetworkingStack:
+    Type: String
+    Description: This is our base layer for our networking layer
+    Default: CrdNet
+  ClusterStack:
+    Type: String
+    Description: This is oour cluster layer eg. Cluster Layer
+    Default: CrdCluster
+Resources:
+  # https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ecs-service.html
+  FargateService:
+    Type: AWS::ECS::Service
+    Properties:
+      Cluster:
+      DeploymentConfiguration:
+      DesiredCount:
+      EnableExecuteCommand:
+      HealthCheckGracePeriodSeconds: 
+      LaunchType:
+      LoadBalancers:
+      - TargetGroupArn: "arn:aws:elasticloadbalancing:us-east-1:049843000081:targetgroup/cruddur-backend-flask-tg/70424895918f398a"
+        ContainerName: "backend-flask"
+        ContainerPort: 4567
+      NetworkConfiguration:
+        AwsvpcConfiguration:
+          AssignPublicIp: "ENABLED"
+          SecurityGroups: !GetAtt  ServiceSG.GroupId
+          Subnets:
+            Fn::Split:
+              - ","
+              - Fn::ImportValue:
+                !Sub "${NetworkingStack}PublicSubnetIds"
+      ServiceRegistries:
+        - RegistryArn: !Ref BackendFlaskServiceDiscoveryRegistry
+          Port: 4567
+      ServiceName: backend-flask
+      TaskDefinitions: backend-flask
+      PlatformVersion: LATEST
+      PropagateTasks: TASK_DEFINITION
+      Role: 
+      ServiceConnectConfiguration:
+        Enabled: 
+      ServiceName:
+      
+
+
+  ServiceSG:
+    # https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-security-group.html
+      Type: AWS::EC2::SecurityGroup
+      Properties:
+        GroupName: !Sub "${AWS::StackName}AlbSG"
+        GroupDescription: Allow Ingress Traffic from the internet
+        VpcId:
+          Fn::ImportValue:
+            !Sub "${NetworkingStack}VpcId"
+        SecurityGroupIngress:
+          - IpProtocol: tcp
+            SourceSecurityGroupId: 
+              Fn::ImportValue:
+                !Sub "${NetworkingStack}ALBSecurityGroupId"
+            FromPort: 80
+            ToPort: 80
+            CidrIp: '0.0.0.0/0'
+            Description: Load Balancer Security Group
