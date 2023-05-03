@@ -223,8 +223,12 @@ Resources:
           !Sub "${NetworkingStack}VpcId"
 
 Outputs:
-  ALBSG:
+  ClusterName:
+    Value: !Ref FargateCluster
+    Export:
+      Name: !Sub "${AWS::StackName}ClusterName"
+  ALBSecurityGroupId:
     Value: !GetAtt ALBSG.GroupId 
     Export:
-      Name: !Sub "${AWS::StackName}ALBSG"
+      Name: !Sub "${AWS::StackName}ALBSecurityGroupId"
 
