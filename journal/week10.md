@@ -20,3 +20,12 @@ I fixed it but I forget what the problem was :/
 
 
 - I was misconfigured my ALB listeners so I had to fix some spelling mistakes Forward => forward & HTTPS => HTTP (for HTTP listener)
+
+
+Im getting this error 
+
+
+![Found Stinrg](https://cdn.discordapp.com/attachments/1040368636763836429/1104569721405329488/image.png)
+
+
+According to the error message, Cloudformation is interpretting inputs as strings rather than Numbers or booleans

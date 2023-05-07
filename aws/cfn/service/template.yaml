@@ -13,9 +13,8 @@ Parameters:
     Type: String
     Description: This is oour cluster layer eg. Cluster Layer
     Default: CrdCluster
-  Containerport:
+  ContainerPort:
     Type: Number
-    Description: This is the port that our container will be listening on
     Default: 4567
   TaskFamily:
     Type: String
@@ -104,7 +103,7 @@ Resources:
             StartPeriod: 60
           PortMappings:
             - Name: !Ref ContainerName
-              ContainerPort: !Ref Containerport
+              ContainerPort: !Ref ContainerPort
               Protocol: tcp
               AppProtocol: http
           LogConfiguration:
@@ -156,7 +155,7 @@ Resources:
       LoadBalancers:
       - TargetGroupArn: "arn:aws:elasticloadbalancing:us-east-1:049843000081:targetgroup/cruddur-backend-flask-tg/70424895918f398a"
         ContainerName: "backend-flask"
-        ContainerPort: !Ref Containerport
+        ContainerPort: !Ref ContainerPort
       NetworkConfiguration:
         AwsvpcConfiguration:
           AssignPublicIp: "ENABLED"
@@ -168,9 +167,9 @@ Resources:
                   !Sub "${NetworkingStack}PubSubnetIds"
       ServiceRegistries:
       - RegistryArn: !Sub 'arn:aws:servicediscovery:${AWS::Region}:${AWS::AccountId}:service/srv-cruddur-backend-flask'
-        Port: !Ref Containerport
+        Port: !Ref ContainerPort
         ContainerName: 'backend-flask'
-        ContainerPort: !Ref Containerport
+        ContainerPort: !Ref ContainerPort
       ServiceName: !Ref ServiceName
       TaskDefinition: !Ref TaskDefinition
       PlatformVersion: LATEST
