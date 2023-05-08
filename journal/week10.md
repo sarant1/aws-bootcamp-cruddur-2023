@@ -19,13 +19,17 @@ Getting these erros with cloudformation
 I fixed it but I forget what the problem was :/
 
 
-- I was misconfigured my ALB listeners so I had to fix some spelling mistakes Forward => forward & HTTPS => HTTP (for HTTP listener)
+- I misconfigured my ALB listeners so I had to fix some spelling mistakes Forward => forward & HTTPS => HTTP (for HTTP listener)
 
 
-Im getting this error 
+## Im getting this error 
 
 
 ![Found Stinrg](https://cdn.discordapp.com/attachments/1040368636763836429/1104569721405329488/image.png)
 
 
-According to the error message, Cloudformation is interpretting inputs as strings rather than Numbers or booleans
+According to the error message, Cloudformation is interpretting inputs as strings rather than Numbers or booleans.
+- I found out that the error was because I was not importing my SecurityGroupId correctly.  Not the best error handling on the cloudformation, but nothing stackoverflow can't solve!
+
+## Im getting error saying the backendTG has not been created yet and the solution was to export the backendTG and import into the service template.
+- I also had to change the target type to ip so that it would work with fargate

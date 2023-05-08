@@ -23,12 +23,12 @@ Parameters:
     Type: String
     Description: This is the name of our task
     Default: backend-flask
+  ContainerName:
+    Type: String
+    Default: 'backend-flask'
   ServiceCpu:
     Type: String
     Default: '256'
-  ContainerName:
-    Type: String
-    Default: '512'
   ServiceMemory:
     Type: String
     Default: '512'
@@ -69,7 +69,7 @@ Parameters:
     Type: String
     Default: 'arn:aws:ssm:us-east-1:049843000081:parameter/cruddur/backend-flask/OTEL_EXPORTER_OTLP_HEADERS'
 Resources:
-  # 
+  # https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ecs-taskdefinition.html
   TaskDefinition:
     Type: AWS::ECS::TaskDefinition
     Properties:
@@ -153,30 +153,40 @@ Resources:
       HealthCheckGracePeriodSeconds: 0
       LaunchType: FARGATE
       LoadBalancers:
-      - TargetGroupArn: "arn:aws:elasticloadbalancing:us-east-1:049843000081:targetgroup/cruddur-backend-flask-tg/70424895918f398a"
+      - TargetGroupArn:
+          Fn::ImportValue:
+              !Sub "${ClusterStack}BackendTG"
         ContainerName: "backend-flask"
         ContainerPort: !Ref ContainerPort
       NetworkConfiguration:
         AwsvpcConfiguration:
-          AssignPublicIp: "ENABLED"
-          SecurityGroups: !GetAtt  ServiceSG.GroupId
+          AssignPublicIp: ENABLED
+          SecurityGroups:
+            - Fn::ImportValue:
+                !Sub "${ClusterStack}ALBSecurityGroupId"
           Subnets:
             Fn::Split:
               - ","
               - Fn::ImportValue:
                   !Sub "${NetworkingStack}PubSubnetIds"
-      ServiceRegistries:
-      - RegistryArn: !Sub 'arn:aws:servicediscovery:${AWS::Region}:${AWS::AccountId}:service/srv-cruddur-backend-flask'
-        Port: !Ref ContainerPort
-        ContainerName: 'backend-flask'
-        ContainerPort: !Ref ContainerPort
+      # ServiceRegistries:
+      # - RegistryArn: !Sub 'arn:aws:servicediscovery:${AWS::Region}:${AWS::AccountId}:service/srv-cruddur-backend-flask'
+      #   Port: !Ref ContainerPort
+      #   ContainerName: 'backend-flask'
+      #   ContainerPort: !Ref ContainerPort
       ServiceName: !Ref ServiceName
       TaskDefinition: !Ref TaskDefinition
       PlatformVersion: LATEST
       PropagateTags: SERVICE
+      # LogConfiguration:
       ServiceConnectConfiguration:
-        Enabled: True
-      
+        Enabled: true
+        Namespace: "cruddur"
+        Services:
+          - DiscoveryName: backend-flask
+            PortName: backend-flask
+            ClientAliases:
+              - Port: !Ref ContainerPort
 
 
   ServiceSG:
@@ -268,5 +278,10 @@ Resources:
       ManagedPolicyArns:
         - arn:aws:iam::aws:policy/AWSXRayDaemonWriteAccess
         - arn:aws:iam::aws:policy/CloudWatchLogsFullAccess
+Outputs:
+  ServiceSecurityGroupId:
+    Value: !GetAtt ServiceSG.GroupId
+    Export:
+      Name: !Sub "${AWS::StackName}ALBSecurityGroupId"
   
    

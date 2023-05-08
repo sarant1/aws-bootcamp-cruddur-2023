@@ -175,7 +175,7 @@ Resources:
   # https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-elasticloadbalancingv2-targetgroup.html
     Type: AWS::ElasticLoadBalancingV2::TargetGroup
     Properties:
-      Name: !Sub "${AWS::StackName}BackendTG"
+      # Name: !Sub "${AWS::StackName}BackendTG"
       HealthCheckEnabled: true
       HealthCheckIntervalSeconds: !Ref BackendHealthCheckIntervalSeconds
       HealthCheckPath: !Ref BackendHealthCheckPath
@@ -184,6 +184,7 @@ Resources:
       HealthyThresholdCount: !Ref BackendHealthyThresholdCount
       UnhealthyThresholdCount: !Ref BackendUnhealthyThresholdCount
       IpAddressType: ipv4
+      TargetType: ip
       Matcher: 
         HttpCode: 200
       Port: !Ref BackendContainerPort
@@ -201,8 +202,9 @@ Resources:
   # https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-elasticloadbalancingv2-targetgroup.html
     Type: AWS::ElasticLoadBalancingV2::TargetGroup
     Properties:
-      Name: !Sub "${AWS::StackName}FrontendTG"
+      # Name: !Sub "${AWS::StackName}FrontendTG"
       Port: !Ref FrontendContainerPort
+      TargetType: ip
       HealthCheckEnabled: true
       HealthCheckProtocol: HTTP
       HealthCheckIntervalSeconds: !Ref FrontendHealthCheckIntervalSeconds
@@ -231,4 +233,12 @@ Outputs:
     Value: !GetAtt ALBSG.GroupId 
     Export:
       Name: !Sub "${AWS::StackName}ALBSecurityGroupId"
+  BackendTG:
+    Value: !Ref BackendTG
+    Export: 
+      Name: !Sub "${AWS::StackName}BackendTG"
+  FrontendTG:
+    Value: !Ref FrontendTG
+    Export: 
+      Name: !Sub "${AWS::StackName}FrontendTG"
 
