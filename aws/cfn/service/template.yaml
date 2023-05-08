@@ -163,7 +163,7 @@ Resources:
           AssignPublicIp: ENABLED
           SecurityGroups:
             - Fn::ImportValue:
-                !Sub "${ClusterStack}ALBSecurityGroupId"
+                !Sub "${ClusterStack}ServiceSGId"
           Subnets:
             Fn::Split:
               - ","
@@ -187,25 +187,6 @@ Resources:
             PortName: backend-flask
             ClientAliases:
               - Port: !Ref ContainerPort
-
-
-  ServiceSG:
-    # https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-security-group.html
-      Type: AWS::EC2::SecurityGroup
-      Properties:
-        GroupName: !Sub "${AWS::StackName}AlbSG"
-        GroupDescription: Allow Ingress Traffic from the internet
-        VpcId:
-          Fn::ImportValue:
-            !Sub "${NetworkingStack}VpcId"
-        SecurityGroupIngress:
-          - IpProtocol: tcp
-            SourceSecurityGroupId: 
-              Fn::ImportValue:
-                !Sub "${ClusterStack}ALBSecurityGroupId"
-            FromPort: 80
-            ToPort: 80
-            Description: Load Balancer Security Group
   ExecutionRole:
     Type: 'AWS::IAM::Role'
     Properties:
@@ -278,10 +259,10 @@ Resources:
       ManagedPolicyArns:
         - arn:aws:iam::aws:policy/AWSXRayDaemonWriteAccess
         - arn:aws:iam::aws:policy/CloudWatchLogsFullAccess
-Outputs:
-  ServiceSecurityGroupId:
-    Value: !GetAtt ServiceSG.GroupId
-    Export:
-      Name: !Sub "${AWS::StackName}ALBSecurityGroupId"
+# Outputs:
+#   ServiceSecurityGroupId:
+#     Value: !GetAtt ServiceSG.GroupId
+#     Export:
+#       Name: !Sub "${AWS::StackName}ALBSecurityGroupId"
   
    

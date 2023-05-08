@@ -58,7 +58,7 @@
     "DOCKER_PASSWORD":        "${localEnv:DOCKER_PASSWORD}",
     "HONEYCOMB_API_KEY":      "${localEnv:HONEYCOMB_API_KEY}",
     "ROLLBAR_ACCESS_TOKEN":   "${localEnv:ROLLBAR_ACCESS_TOKEN}",
-    "PROD_CONNECTION_URL":   "${localEnv:PROD_CONNECTION_URL}",
+    "PROD_CONNECTION_URL":    "${localEnv:PROD_CONNECTION_URL}",
     "PROD_CONNECTION_MAIN":   "${localEnv:PROD_CONNECTION_MAIN}",
     "CONNECTION_URL":   "${localEnv:CONNECTION_URL}",
     "DB_SG_ID": "${localEnv:DB_SG_ID}",
@@ -66,7 +66,8 @@
     "AWS_COGNITO_USER_POOL_ID": "${localEnv:AWS_COGNITO_USER_POOL_ID}",
     "DOMAIN_NAME": "${localEnv:DOMAIN_NAME}",
     "UPLOADS_BUCKET_NAME": "${localEnv:UPLOADS_BUCKET_NAME}",
-    "CFN_BUCKET": "${localEnv:CFN_BUCKET}"
+    "CFN_BUCKET": "${localEnv:CFN_BUCKET}",
+    "MasterUserPassword": "${localEnv:MasterUserPassword}"
   },
   
   "remoteUser": "bootcamp",

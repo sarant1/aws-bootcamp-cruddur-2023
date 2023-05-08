@@ -157,6 +157,26 @@ Resources:
           ToPort: 80
           CidrIp: '0.0.0.0/0'
           Description: INTERNET HTTP
+  ServiceSG:
+  # https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-security-group.html
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupName: !Sub "${AWS::StackName}ServSG"
+      GroupDescription: Security Group for fargate services for Cruddur
+      VpcId:
+        Fn::ImportValue:
+          !Sub "${NetworkingStack}VpcId"
+      SecurityGroupIngress:
+          - IpProtocol: tcp
+            SourceSecurityGroupId: !GetAtt ALBSG.GroupId
+            FromPort: 4567
+            ToPort: 4567
+            Description: Allow traffic from ALB to backend-flask
+          - IpProtocol: tcp
+            SourceSecurityGroupId: !GetAtt ALBSG.GroupId
+            FromPort: 3000
+            ToPort: 3000
+            Description: Allow traffic from ALB to frontend-react
   ApiALBListenerRule:
   # https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-elasticloadbalancingv2-listenerrule.html
     Type: AWS::ElasticLoadBalancingV2::ListenerRule
@@ -229,6 +249,10 @@ Outputs:
     Value: !Ref FargateCluster
     Export:
       Name: !Sub "${AWS::StackName}ClusterName"
+  ALBServiceGroupId:
+    Value: !GetAtt ServiceSG.GroupId 
+    Export:
+      Name: !Sub "${AWS::StackName}ServiceSGId"
   ALBSecurityGroupId:
     Value: !GetAtt ALBSG.GroupId 
     Export:

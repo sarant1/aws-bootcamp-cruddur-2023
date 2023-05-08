@@ -1,0 +1,88 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: |
+  RDS Instance
+  Database Security Group
+Parameters:
+  NetworkingStack:
+    Type: String
+    Default: CrdNet
+  ClusterStack:
+    Type: String
+    Default: CrdCluster
+  BackupRetentionPeriod:
+    Type: Number
+    Default: 0
+  InstanceClass:
+    Type: String
+    Default: db.t4g.micro
+  DBInstanceIdentifier:
+    Type: String
+    Default: cruddur-instance
+  DBName:
+    Type: String
+    Default: cruddur
+  DeletionProtection:
+    Type: String
+    AllowedValues:
+      - true
+      - false
+    Default: true
+  EngineVersion:
+    Type: String
+    Default: '15.2'
+  MasterUsername:
+    Type: String
+  MasterUserPassword:
+    Type: String
+    NoEcho: true
+Resources:
+  RDSPostgresSG:
+    # https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-security-group.html
+      Type: AWS::EC2::SecurityGroup
+      Properties:
+        GroupName: !Sub "${AWS::StackName}AlbSG"
+        GroupDescription: Allow Ingress Traffic from the internet
+        VpcId:
+          Fn::ImportValue:
+            !Sub "${NetworkingStack}VpcId"
+        SecurityGroupIngress:
+          - IpProtocol: tcp
+            SourceSecurityGroupId: 
+              Fn::ImportValue:
+                !Sub "${ClusterStack}ServiceSGId"
+            FromPort: 5432
+            ToPort: 5432
+            Description: Load Balancer Security Group
+  DBSubnetGroup:
+    Type: AWS::RDS::DBSubnetGroup
+    Properties:
+      DBSubnetGroupDescription: Subnets available for the RDS DB Instance
+      SubnetIds:
+        Fn::Split:
+          - ","
+          - Fn::ImportValue:
+              !Sub "${NetworkingStack}PubSubnetIds"
+  Database:
+  # https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-rds-dbinstance.html
+    Type: AWS::RDS::DBInstance
+    DeletionPolicy: Snapshot
+    UpdateReplacePolicy: Snapshot
+    Properties:
+      AllocatedStorage: 20
+      AllowMajorVersionUpgrade: true
+      BackupRetentionPeriod: !Ref BackupRetentionPeriod
+      DBInstanceClass: !Ref InstanceClass
+      DBInstanceIdentifier: !Ref DBInstanceIdentifier
+      DBName: !Ref DBName
+      DBSubnetGroupName: !Ref DBSubnetGroup
+      DeletionProtection: !Ref DeletionProtection
+      EnablePerformanceInsights: true
+      Engine: postgres
+      EngineVersion: !Ref EngineVersion
+      MasterUsername: !Ref MasterUsername
+      MasterUserPassword: !Ref MasterUserPassword
+      PubliclyAccessible: true
+      VPCSecurityGroups:
+        - !GetAtt RDSPostgresSG.GroupId
+
+#Outputs:
