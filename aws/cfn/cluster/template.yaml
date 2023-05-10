@@ -169,13 +169,13 @@ Resources:
       SecurityGroupIngress:
           - IpProtocol: tcp
             SourceSecurityGroupId: !GetAtt ALBSG.GroupId
-            FromPort: 4567
-            ToPort: 4567
+            FromPort: !Ref BackendContainerPort
+            ToPort: !Ref BackendContainerPort
             Description: Allow traffic from ALB to backend-flask
           - IpProtocol: tcp
             SourceSecurityGroupId: !GetAtt ALBSG.GroupId
-            FromPort: 3000
-            ToPort: 3000
+            FromPort: !Ref FrontendContainerPort
+            ToPort: !Ref FrontendContainerPort
             Description: Allow traffic from ALB to frontend-react
   ApiALBListenerRule:
   # https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-elasticloadbalancingv2-listenerrule.html

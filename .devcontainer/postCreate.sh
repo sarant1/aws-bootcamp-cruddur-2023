@@ -25,6 +25,7 @@ echo $(pwd)
 pip install cfn-lint
 
 # Install cfn toml
+chown -R bootcamp:bootcamp /var/lib/gems/3.0.0
 gem install cfn-toml
 
 # Set path to include cfn-lint
