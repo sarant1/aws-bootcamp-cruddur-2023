@@ -20,7 +20,6 @@ echo $(pwd)
 /workspaces/aws-bootcamp-cruddur-2023/bin/backend/generate-env
 
 
-
 # Install Cfn-lint
 pip install cfn-lint
 
@@ -30,5 +29,9 @@ gem install cfn-toml
 
 # Set path to include cfn-lint
 export PATH=$PATH:/home/bootcamp/.local/bin
-
 cp /workspaces/aws-bootcamp-cruddur-2023/thumbing-serverless-cdk/.env.example /workspaces/aws-bootcamp-cruddur-2023/thumbing-serverless-cdk/.env
+
+# Install AWS SAM
+wget https://github.com/aws/aws-sam-cli/releases/latest/download/aws-sam-cli-linux-x86_64.zip
+unzip aws-sam-cli-linux-x86_64.zip -d sam-installation
+sudo ./sam-installation/install

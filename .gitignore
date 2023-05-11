@@ -4,3 +4,5 @@ frontend-react-js/build/*
 *.deb
 node_modules
 *.toml
+.aws-sam
+samconfig.toml
