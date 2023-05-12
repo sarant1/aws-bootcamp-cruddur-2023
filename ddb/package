@@ -1,0 +1,15 @@
+#! /usr/bin/env bash
+set -e # stop the execution of the script if it fails
+
+
+TEMPLATE_PATH='/workspaces/aws-bootcamp-cruddur-2023/.aws-sam/build/template.yaml'
+OUTPUT_TEMP_PATH='/workspaces/aws-bootcamp-cruddur-2023/.aws-sam/build/packaged.yaml'
+CONFIG_PATH="/workspaces/aws-bootcamp-cruddur-2023/ddb/config.toml"
+
+echo "== package"
+sam package \
+--s3-bucket "cfn-artifacts-sda" \
+--config-file $CONFIG_PATH \
+--output-template-file $OUTPUT_TEMP_PATH \
+--s3-prefix "ddb" \
+--template-file $TEMPLATE_PATH

@@ -22,19 +22,21 @@ sam build \
 TEMPLATE_PATH='/workspaces/aws-bootcamp-cruddur-2023/.aws-sam/build/template.yaml'
 OUTPUT_TEMP_PATH='/workspaces/aws-bootcamp-cruddur-2023/.aws-sam/build/packaged.yaml'
 
-
+echo "== package"
 sam package \
 --s3-bucket "cfn-artifacts-sda" \
 --config-file $CONFIG_PATH \
 --output-template-file $OUTPUT_TEMP_PATH \
---s3-prefix "ddb"
+--s3-prefix "ddb" \
 --template-file $TEMPLATE_PATH
-# sam deploy
 
+# SAM Deploy
+PACKAGED_TEMPLATE_FILE='/workspaces/aws-bootcamp-cruddur-2023/.aws-sam/build/packaged.yaml'
 
+echo "== deploy"
 sam deploy \
-    --template-file $OUTPUT_TEMP_PATH \
-    --stack-name "CrdDdb" \
-    --config_file $CONFIG_PATH \
-    --tags = group=cruddur-ddb \
-    --capabilities CAPABILITY_IAM
+--template-file $PACKAGED_TEMPLATE_FILE \
+--stack-name "CrdDdb" \
+--config-file $CONFIG_PATH \
+--tags group=cruddur-ddb \
+--capabilities CAPABILITY_NAMED_IAM

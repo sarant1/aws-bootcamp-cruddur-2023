@@ -13,6 +13,9 @@ Parameters:
   Timeout:
     Type: String
     Default: 3
+  DeleteProtection:
+    Type: String
+    Default: false
 Resources:
   DynamoDBTable:
     Type: AWS::DynamoDB::Table
@@ -49,16 +52,16 @@ Resources:
       StreamSpecification:
         StreamViewType: NEW_IMAGE
       BillingMode: PROVISIONED
-      DeletionProtectionEnabled: true
+      DeletionProtectionEnabled: !Ref DeleteProtection
   ProcessDynamoDBStream:
     Type: AWS::Serverless::Function
     # https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/sam-resource-function.html
     Properties:
       Handler: lambda_function.lambda_handler
       Runtime: !Ref PythonRuntime
-      Architectures: arm64
-      InlineCode: ??
-      CodeUri: ./src
+      Architectures: 
+        - arm64
+      CodeUri: .
       Role: !GetAtt ExecutionRole.Arn
       MemorySize: !Ref MemorySize  
       PackageType: Zip
@@ -72,6 +75,16 @@ Resources:
             BatchSize: 1
             # IS THIS THE RIGHT VALUE?
             StartingPosition: LATEST
+  LambdaLogGroup:
+    Type: "AWS::Logs::LogGroup"
+    Properties:
+      LogGroupName: "/aws/lambda/cruddur-messaging-stream00"
+      RetentionInDays: 14
+  LambdaLogStream:
+    Type: "AWS::Logs::LogStream"
+    Properties:
+      LogGroupName: !Ref LambdaLogGroup
+      LogStreamName: "LambdaExecution"
   ExecutionRole:
     # https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-iam-role.html
     Type: AWS::IAM::Role

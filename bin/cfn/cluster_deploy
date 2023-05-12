@@ -15,6 +15,7 @@ PARAMETERS=$(cfn-toml params v2 -t $CONFIG_PATH)
 
 aws cloudformation deploy \
     --stack-name $STACK_NAME \
+    --s3-prefix "cluster" \
     --s3-bucket $BUCKET \
     --region $REGION \
     --parameter-overrides $PARAMETERS \
