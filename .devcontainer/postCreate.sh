@@ -35,3 +35,6 @@ cp /workspaces/aws-bootcamp-cruddur-2023/thumbing-serverless-cdk/.env.example /w
 wget https://github.com/aws/aws-sam-cli/releases/latest/download/aws-sam-cli-linux-x86_64.zip
 unzip aws-sam-cli-linux-x86_64.zip -d sam-installation
 sudo ./sam-installation/install
+
+rm ./sam-installing
+rm aws-sam-cli-linux-x86_64.zip
