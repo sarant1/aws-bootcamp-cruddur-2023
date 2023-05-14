@@ -12,10 +12,10 @@ Parameters:
     Default: 'sarant1/aws-bootcamp-cruddur-2023'
   ClusterStack:
     Type: String
-    Default: CrdCluster
-  Service:
+  ServiceStack:
     Type: String
-    Default: frontend
+  ArtifactBucketName:
+    Type: String
 Resources:
   CodeBuildBakeImageStack:
     # https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-stack.html
@@ -50,7 +50,7 @@ Resources:
                 - Name: Source
               Configuration:
                 ConnectionArn: !Ref CodeStarConnection
-                FullRepositoryId: !Ref GithubRepo
+                FullRepositoryId: !Ref GitHubRepo
                 BranchName: !Ref GitHubBranch
                 OutputArtifactFormat: "CODE_ZIP"
         - Name: Build
@@ -86,10 +86,10 @@ Resources:
                 DeploymentTimeout: "10"
                 ClusterName:
                   Fn::ImportValue:
-                    !Sub ${ClusterStack}ClusterName
+                    !Sub "${ClusterStack}ClusterName"
                 ServiceName:
                   Fn::ImportValue:
-                    !Sub ${ServiceStack}ServiceName
+                    !Sub "${ServiceStack}ServiceName"
   CodePipelineRole:
     Type: AWS::IAM::Role
     Properties:
