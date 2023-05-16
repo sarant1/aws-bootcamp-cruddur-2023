@@ -26,6 +26,8 @@ export default function DesktopNavigationLink(props) {
         return <MoreIcon className='icon' />
       case 'messages':
         return <MessagesIcon className='icon' />
+      default:
+        break;
     }
   }
 
