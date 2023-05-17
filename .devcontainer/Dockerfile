@@ -35,6 +35,7 @@ RUN yes | unminimize \
         ssh \
         sudo \
         unzip \
+        zip \
         wget \
         vim \     
     && locale-gen en_US.UTF-8 \

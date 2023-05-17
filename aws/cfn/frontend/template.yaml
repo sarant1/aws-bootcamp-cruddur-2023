@@ -75,8 +75,8 @@ Resources:
     Properties:
       DistributionConfig:
         Aliases:
-          - cruddur.com
-          - www.cruddur.com
+          - sudosam.com
+          - www.sudosam.com
         Comment: Frontend React Js for Cruddur
         Enabled: true
         HttpVersion: http2and3 
