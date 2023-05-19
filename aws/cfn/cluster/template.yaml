@@ -118,7 +118,7 @@ Resources:
         - CertificateArn: !Ref CertificateArn
       DefaultActions:
         - Type: forward
-          TargetGroupArn: !Ref FrontendTG
+          TargetGroupArn: !Ref BackendTG
       LoadBalancerArn: !Ref ALB
       Port: 443
   HTTPListener:
@@ -172,25 +172,7 @@ Resources:
             FromPort: !Ref BackendContainerPort
             ToPort: !Ref BackendContainerPort
             Description: Allow traffic from ALB to backend-flask
-          - IpProtocol: tcp
-            SourceSecurityGroupId: !GetAtt ALBSG.GroupId
-            FromPort: !Ref FrontendContainerPort
-            ToPort: !Ref FrontendContainerPort
-            Description: Allow traffic from ALB to frontend-react
-  ApiALBListenerRule:
-  # https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-elasticloadbalancingv2-listenerrule.html
-    Type: AWS::ElasticLoadBalancingV2::ListenerRule
-    Properties:
-      Conditions:
-        - Field: "host-header"
-          HostHeaderConfig:
-            Values:
-              - api.sudosam.com
-      Actions:
-        - Type: forward
-          TargetGroupArn: !Ref BackendTG
-      ListenerArn: !Ref HTTPSListener
-      Priority: 1
+
   BackendTG:
   # https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-elasticloadbalancingv2-targetgroup.html
     Type: AWS::ElasticLoadBalancingV2::TargetGroup
@@ -208,33 +190,6 @@ Resources:
       Matcher: 
         HttpCode: 200
       Port: !Ref BackendContainerPort
-      Protocol: HTTP
-      ProtocolVersion: HTTP2
-      TargetGroupAttributes: 
-        - Key: deregistration_delay.timeout_seconds
-          Value: 0
-      VpcId:
-        Fn::ImportValue:
-          !Sub "${NetworkingStack}VpcId"
-
-
-  FrontendTG:
-  # https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-elasticloadbalancingv2-targetgroup.html
-    Type: AWS::ElasticLoadBalancingV2::TargetGroup
-    Properties:
-      # Name: !Sub "${AWS::StackName}FrontendTG"
-      Port: !Ref FrontendContainerPort
-      TargetType: ip
-      HealthCheckEnabled: true
-      HealthCheckProtocol: HTTP
-      HealthCheckIntervalSeconds: !Ref FrontendHealthCheckIntervalSeconds
-      HealthCheckPath: !Ref FrontendHealthCheckPath
-      HealthCheckTimeoutSeconds: !Ref FrontendHealthCheckTimeoutSeconds
-      HealthyThresholdCount: !Ref FrontendHealthyThresholdCount
-      UnhealthyThresholdCount: !Ref FrontendUnhealthyThresholdCount
-      IpAddressType: ipv4
-      Matcher: 
-        HttpCode: 200
       Protocol: HTTP
       ProtocolVersion: HTTP2
       TargetGroupAttributes: 
