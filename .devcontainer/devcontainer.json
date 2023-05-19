@@ -67,7 +67,7 @@
     "DOMAIN_NAME": "${localEnv:DOMAIN_NAME}",
     "UPLOADS_BUCKET_NAME": "${localEnv:UPLOADS_BUCKET_NAME}",
     "CFN_BUCKET": "${localEnv:CFN_BUCKET}",
-    "MasterUserPassword": "${localEnv:MasterUserPassword}"
+    "MasterUserPassword": "${localEnv:DB_PASSWORD}"
   },
   
   "remoteUser": "bootcamp",
