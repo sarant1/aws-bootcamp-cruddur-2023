@@ -1,0 +1,129 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: |
+  - DynamoDB Table
+  - DynamoDB Stream
+Parameters:
+  PythonRuntime:
+    Type: String
+    Default: python3.9
+  MemorySize:
+    Type: String
+    Default: 128
+  Timeout:
+    Type: String
+    Default: 3
+  DeleteProtection:
+    Type: String
+    Default: false
+Resources:
+  DynamoDBTable:
+    Type: AWS::DynamoDB::Table
+    # https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-dynamodb-table.html
+    Properties: 
+      AttributeDefinitions: 
+        - AttributeName: message_group_uuid
+          AttributeType: S
+        - AttributeName: pk
+          AttributeType: S
+        - AttributeName: sk
+          AttributeType: S
+      KeySchema: 
+        - AttributeName: pk
+          KeyType: HASH
+        - AttributeName: sk
+          KeyType: RANGE
+      TableClass: STANDARD
+      GlobalSecondaryIndexes:
+        - IndexName: message_group_uuid-index
+          KeySchema:
+            - AttributeName: message_group_uuid
+              KeyType: HASH
+            - AttributeName: sk
+              KeyType: RANGE
+          Projection:
+            ProjectionType: ALL
+          ProvisionedThroughput: 
+            ReadCapacityUnits: 5
+            WriteCapacityUnits: 5
+      ProvisionedThroughput: 
+        ReadCapacityUnits: 5
+        WriteCapacityUnits: 5
+      StreamSpecification:
+        StreamViewType: NEW_IMAGE
+      BillingMode: PROVISIONED
+      DeletionProtectionEnabled: !Ref DeleteProtection
+  ProcessDynamoDBStream:
+    Type: AWS::Serverless::Function
+    # https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/sam-resource-function.html
+    Properties:
+      Handler: lambda_function.lambda_handler
+      Runtime: !Ref PythonRuntime
+      Architectures: 
+        - arm64
+      CodeUri: .
+      Role: !GetAtt ExecutionRole.Arn
+      MemorySize: !Ref MemorySize  
+      PackageType: Zip
+      Timeout: !Ref Timeout
+      Events:
+        Stream:
+          Type: DynamoDB
+          Properties:
+            Stream: !GetAtt DynamoDBTable.StreamArn
+            # DOES LAMBDA HANDLE MORE THAN ONE RECORD AT A TIME?
+            BatchSize: 1
+            # IS THIS THE RIGHT VALUE?
+            StartingPosition: LATEST
+  LambdaLogGroup:
+    Type: "AWS::Logs::LogGroup"
+    Properties:
+      LogGroupName: "/aws/lambda/cruddur-messaging-stream00"
+      RetentionInDays: 14
+  LambdaLogStream:
+    Type: "AWS::Logs::LogStream"
+    Properties:
+      LogGroupName: !Ref LambdaLogGroup
+      LogStreamName: "LambdaExecution"
+  ExecutionRole:
+    # https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-iam-role.html
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: CruddurDdbStreamExecRole
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: 'Allow'
+            Principal:
+              Service: 'lambda.amazonaws.com'
+            Action: 'sts:AssumeRole'
+      Policies:
+        - PolicyName: "LambdaExecutionPolicy"
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: "Allow"
+                Action: "logs:CreateLogGroup"
+                Resource: !Sub "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:*"
+              - Effect: "Allow"
+                Action:
+                  - "logs:CreateLogStream"
+                  - "logs:PutLogEvents"
+                Resource: !Sub "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:${LambdaLogGroup}:*"
+              - Effect: "Allow"
+                Action:
+                  - "ec2:CreateNetworkInterface"
+                  - "ec2:DeleteNetworkInterface"
+                  - "ec2:DescribeNetworkInterfaces"
+                Resource: "*"
+              - Effect: "Allow"
+                Action:
+                  - "lambda:InvokeFunction"
+                Resource: "*"
+              - Effect: "Allow"
+                Action:
+                  - "dynamodb:DescribeStream"
+                  - "dynamodb:GetRecords"
+                  - "dynamodb:GetShardIterator"
+                  - "dynamodb:ListStreams"
+                Resource: "*"

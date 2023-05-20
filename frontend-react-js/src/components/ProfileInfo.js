@@ -3,8 +3,6 @@ import {ReactComponent as ElipsesIcon} from './svg/elipses.svg';
 import React from "react";
 import { Auth } from 'aws-amplify';
 
-// [TODO] Authenication
-import Cookies from 'js-cookie'
 import ProfileAvatar from './ProfileAvatar';
 
 export default function ProfileInfo(props) {
@@ -27,7 +25,7 @@ export default function ProfileInfo(props) {
 
   const classes = () => {
     let classes = ["profile-info-wrapper"];
-    if (popped == true){
+    if (popped === true){
       classes.push('popped');
     }
     return classes.join(' ');

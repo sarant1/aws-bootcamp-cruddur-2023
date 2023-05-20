@@ -58,18 +58,19 @@
     "DOCKER_PASSWORD":        "${localEnv:DOCKER_PASSWORD}",
     "HONEYCOMB_API_KEY":      "${localEnv:HONEYCOMB_API_KEY}",
     "ROLLBAR_ACCESS_TOKEN":   "${localEnv:ROLLBAR_ACCESS_TOKEN}",
-    "PROD_CONNECTION_URL":   "${localEnv:PROD_CONNECTION_URL}",
+    "PROD_CONNECTION_URL":    "${localEnv:PROD_CONNECTION_URL}",
     "PROD_CONNECTION_MAIN":   "${localEnv:PROD_CONNECTION_MAIN}",
     "CONNECTION_URL":   "${localEnv:CONNECTION_URL}",
     "DB_SG_ID": "${localEnv:DB_SG_ID}",
     "DB_SG_RULE_ID": "${localEnv:DB_SG_RULE_ID}",
     "AWS_COGNITO_USER_POOL_ID": "${localEnv:AWS_COGNITO_USER_POOL_ID}",
     "DOMAIN_NAME": "${localEnv:DOMAIN_NAME}",
-    "UPLOADS_BUCKET_NAME": "${localEnv:UPLOADS_BUCKET_NAME}"
-
+    "UPLOADS_BUCKET_NAME": "${localEnv:UPLOADS_BUCKET_NAME}",
+    "CFN_BUCKET": "${localEnv:CFN_BUCKET}",
+    "MasterUserPassword": "${localEnv:DB_PASSWORD}"
   },
   
   "remoteUser": "bootcamp",
 
-  "postAttachCommand": "cd ./frontend-react-js && npm i && cd ../backend-flask && pip install -r requirements.txt && cd ../thumbing-serverless-cdk && npm i && cd .. && ./.devcontainer/postCreate.sh"
+  "postAttachCommand": "cd ./frontend-react-js && npm i && cd ../backend-flask && pip install -r requirements.txt && cd ../thumbing-serverless-cdk && npm i && sudo chown -R bootcamp:bootcamp /usr/local/bin && chown -R bootcamp:bootcamp /var/lib/gems/3.0.0 && cd .. && ./.devcontainer/postCreate.sh"
 }
