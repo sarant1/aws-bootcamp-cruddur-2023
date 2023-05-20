@@ -41,8 +41,8 @@ init_cors(app)
 ## Initialization
 init_honeycomb(app)
 with app.app_context():
-  init_rollbar()
-init_xray()
+  init_rollbar(app)
+init_xray(app)
 
 def model_json(model):
   if model['errors'] is not None:
