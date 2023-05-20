@@ -104,7 +104,7 @@ cors = CORS(
   #     rollbar.init(
   #         # access token
   #         rollbar_access_token,
-  #         # environment name
+  #         # environment name 
   #         'production',
   #         # server root directory, makes tracebacks prettier
   #         root=os.path.dirname(os.path.realpath(__file__)),
@@ -248,17 +248,25 @@ def data_search():
 @app.route("/api/activities", methods=['POST','OPTIONS'])
 @cross_origin()
 def data_activities():
-  print(request, flush=True)
-  user_handle  = 'samuelarant'
-  message = request.json['message']
-  ttl = request.json['ttl']
-  model = CreateActivity.run(message, user_handle, ttl)
-  
-  if model['errors'] is not None:
-    return model['errors'], 422
-  else:
-    return model['data'], 200
-  return
+  access_token = extract_access_token(request.headers)
+  try:
+    claims = cognito_jwt_token.verify(access_token)
+    # authenticated request
+    cognito_user_id = claims['sub']
+    print(request, flush=True)
+    # user_handle  = 'samuelarant'
+    message = request.json['message']
+    ttl = request.json['ttl']
+    model = CreateActivity.run(message, cognito_user_id, ttl)
+    
+    if model['errors'] is not None:
+      return model['errors'], 422
+    else:
+      return model['data'], 200
+  except TokenVerifyError as e:
+    app.logger.debug(e)
+    return {}, 401
+
 
 @app.route("/api/activities/<string:activity_uuid>", methods=['GET'])
 # @xray_recorder.capture('activites_show')

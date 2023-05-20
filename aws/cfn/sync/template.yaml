@@ -20,7 +20,6 @@ Conditions:
   CreateOIDCProvider: !Equals 
     - !Ref OIDCProviderArn
     - ""
-
 Resources:
   Role:
     Type: AWS::IAM::Role

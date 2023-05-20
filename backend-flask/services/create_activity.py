@@ -2,10 +2,10 @@ from datetime import datetime, timedelta, timezone
 from lib.db import db
 #from lib.db import db
 class CreateActivity:
-  def create_activity(handle, message, expires_at):
+  def create_activity(cognito_user_id, message, expires_at):
       sql = db.template('activities', 'create')
       return db.query_commit(sql, {
-        'handle': handle,
+        'cognito_user_id': cognito_user_id,
         'message': message, 
         'expires_at': expires_at
       })

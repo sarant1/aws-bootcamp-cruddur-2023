@@ -49,10 +49,8 @@ Parameters:
     Default: '1hrc6ma39r7iqp4iv48agr0kgc'
   EnvFrontendUrl:
     Type: String
-    Default: 'https://app.sudosam.com'
   EnvBackendUrl:
     Type: String
-    Default: 'https://api.sudosam.com'
   SecretsAwsAccessKeyId:
     Type: String
     Default: 'arn:aws:ssm:us-east-1:049843000081:parameter/cruddur/backend-flask/AWS_ACCESS_KEY_ID'
