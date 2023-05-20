@@ -35,5 +35,9 @@ I misconfigured my ALB listeners so I had to fix some spelling mistakes Forward 
 
 **I am setting up the front end and since I do not use route53 I have to find a solution for when I deploy the frontend cfn or just transfer my domain to route53**
 
+- I am transfering my domain to route53, I am having trouble deleting my current acm certificate because it is in use.
+SOLUTION: I found that my certificate was being usued for a custom domain in API gateway, I wish AWS showed where it was located rather than that the cert was in use with some random account for a elastic load balancer!
+
+
 
 
