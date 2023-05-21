@@ -3,7 +3,7 @@ from aws_xray_sdk.core import xray_recorder
 from lib.db import db
 
 class UserActivities:
-  def run(user_handle):
+  def run(self, user_handle):
     print("USER HANDLE================", user_handle)
     # x-ray -----
     segment = xray_recorder.begin_segment('user_activities')
