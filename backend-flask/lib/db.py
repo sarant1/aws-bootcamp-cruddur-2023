@@ -2,6 +2,9 @@ from psycopg_pool import ConnectionPool
 import os,sys,re
 from flask import current_app as app
 
+blue = "\033[94m"
+no_color = "\033[0m"
+
 class Db:
   def __init__(self):
     self.init_pool()
@@ -49,7 +52,7 @@ class Db:
             returning_id = cur.fetchone()[0]
         conn.commit()
         if is_returning_id:
-          print("RETURNING ID")
+          print(f"{blue}RETURNING ID{no_color}")
           print(returning_id, flush=True)
           return returning_id 
     except Exception as err:

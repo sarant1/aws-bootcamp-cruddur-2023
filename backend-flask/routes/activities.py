@@ -47,13 +47,14 @@ def load(app):
   def data_activities():
     message = request.json['message']
     ttl = request.json['ttl']
-    model = CreateActivity.run(message, g.cognito_user_id, ttl)
+    model = CreateActivity().run(message, g.cognito_user_id, ttl)
     return model_json(model)
 
   @app.route("/api/activities/<string:activity_uuid>/reply", methods=['POST','OPTIONS'])
   @cross_origin()
   @jwt_required()
   def data_activities_reply(activity_uuid):
+    print("-0-0-0--0-0-0-00---activity_uuid:", activity_uuid, flush=True)
     message = request.json['message']
-    model = CreateReply.run(message, g.cognito_user_id, activity_uuid)
+    model = CreateReply().run(message, g.cognito_user_id, activity_uuid)
     return model_json(model)
