@@ -6,9 +6,9 @@ import DesktopSidebar     from 'components/DesktopSidebar';
 import ActivityFeed from 'components/ActivityFeed';
 import ActivityForm from 'components/ActivityForm';
 import ReplyForm from 'components/ReplyForm';
-import { checkAuth, getAccessToken } from 'lib/CheckAuth';
+import { checkAuth } from 'lib/CheckAuth';
 import ProfileInfo from 'components/ProfileInfo';
-
+import { get } from 'lib/Requests';
 
 
 export default function HomeFeedPage() {
@@ -20,27 +20,16 @@ export default function HomeFeedPage() {
   const dataFetchedRef = React.useRef(false);
   const [profile, setProfile] = React.useState([]);
 
+
   const loadData = async () => {
-    try {
-      const backend_url = `${process.env.REACT_APP_BACKEND_URL}/api/activities/home`
-      const access_token = await getAccessToken();
-      console.log(localStorage.getItem("access_token"));
-      const res = await fetch(backend_url, {
-        headers: {
-          Authorization: `Bearer ${access_token}`
-        },
-        method: "GET",
-      });
-      let resJson = await res.json();
-      if (res.status === 200) {
-        setActivities(resJson)
-      } else {
-        console.log(res)
+    const url = `${process.env.REACT_APP_BACKEND_URL}/api/activities/home`
+    get(url,{
+      auth: true,
+      success: function(data){
+        setActivities(data)
       }
-    } catch (err) {
-      console.log(err);
-    }
-  };
+    })
+  }
 
   React.useEffect(()=>{
     //prevents double call

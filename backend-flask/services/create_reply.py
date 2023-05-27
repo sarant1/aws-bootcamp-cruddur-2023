@@ -2,7 +2,7 @@ from datetime import datetime, timedelta, timezone
 from lib.db import db
 
 class CreateReply:
-  def run(self, message, cognito_user_id, activity_uuid):
+  def run(self, cognito_user_id, message, activity_uuid):
     model = {
       'errors': None,
       'data': None
@@ -33,7 +33,8 @@ class CreateReply:
     return model
   
 
-  def create_reply(self,cognito_user_id, message, reply_to_activity_uuid):
+  @staticmethod
+  def create_reply(cognito_user_id, message, reply_to_activity_uuid):
       
       print("CREATING REPLY-------------------", flush=True)
       sql = db.template('activities', 'reply')

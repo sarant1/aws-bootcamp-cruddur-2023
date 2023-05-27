@@ -3,7 +3,7 @@ import React from "react";
 import process from 'process';
 import {ReactComponent as BombIcon} from './svg/bomb.svg';
 import {post} from 'lib/Requests';
-import FormErrors from 'components/FormErros';
+import FormErrors from 'components/FormErrors';
 
 export default function ActivityForm(props) {
   const [count, setCount] = React.useState(0);
@@ -18,6 +18,7 @@ export default function ActivityForm(props) {
   }
 
   const onsubmit = async (event) => {
+    setErrors('')
     event.preventDefault();
     const url = `${process.env.REACT_APP_BACKEND_URL}/api/activities`
     const payload_data = {

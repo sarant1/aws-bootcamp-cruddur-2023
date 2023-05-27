@@ -57,6 +57,6 @@ def load(app):
   def data_activities_reply(activity_uuid):
     print("-0-0-0--0-0-0-00---activity_uuid:", activity_uuid, flush=True)
     message = request.json['message']
-    model = CreateReply().run(g.cognito_user_id, message, activity_uuid)
+    model = CreateReply.run(g.cognito_user_id, message, activity_uuid)
     
     return model_json(model)
