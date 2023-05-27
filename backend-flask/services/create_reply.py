@@ -32,7 +32,8 @@ class CreateReply:
       model['data'] = object_json
     return model
   
-  def create_reply(self, cognito_user_id, message, reply_to_activity_uuid):
+
+  def create_reply(self,cognito_user_id, message, reply_to_activity_uuid):
       
       print("CREATING REPLY-------------------", flush=True)
       sql = db.template('activities', 'reply')

@@ -47,6 +47,10 @@ def load(app):
   def data_activities():
     message = request.json['message']
     ttl = request.json['ttl']
+    print("---------CHECKING_PARAMS-----------", flush=True)
+    print(g.cognito_user_id, flush=True)
+    print(message, flush=True)
+    print(ttl, flush=True)
     model = CreateActivity().run(message, g.cognito_user_id, ttl)
     return model_json(model)
 

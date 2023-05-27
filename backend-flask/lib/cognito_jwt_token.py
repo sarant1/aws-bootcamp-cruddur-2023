@@ -136,6 +136,7 @@ def jwt_required(f=None, on_error=None):
             user_pool_client_id=os.getenv("AWS_COGNITO_USER_POOL_CLIENT_ID"),
             region=os.getenv("AWS_DEFAULT_REGION")
         )
+        # Using the extract_access_token function and the headers to get the access token
         access_token = extract_access_token(request.headers)
         try:
             claims = cognito_jwt_token.verify(access_token)
