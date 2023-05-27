@@ -6,6 +6,11 @@
 Issue: After adding inbound rules to RDS to accept Post Confirmation, it still was timing out.
 - Solution: Add outbound rules to lambda function
 
+Issue: For some reason my replies are not pushing under my activites ( they are being pushed as a activity themeself )
+- Solution: I noticed the following error:
+
+![Alt text](./assets/image.png)
+
 
 ### Learning Git
 

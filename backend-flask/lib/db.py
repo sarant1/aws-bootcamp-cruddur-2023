@@ -22,8 +22,9 @@ class Db:
   def print_sql(self,title,sql,params={}):
     cyan = '\033[96m'
     no_color = '\033[0m'
+    self.print_params(params)
     print(f'{cyan} SQL STATEMENT-[{title}]------{no_color}')
-    print(sql,params)
+    print(sql)
 
   def template(self, *args):
     pathing = list((app.root_path, 'db', 'sql') + args)

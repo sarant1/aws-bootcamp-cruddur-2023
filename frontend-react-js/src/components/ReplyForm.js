@@ -3,7 +3,7 @@ import React from "react";
 import process from 'process';
 import { getAccessToken } from 'lib/CheckAuth';
 import ActivityContent  from '../components/ActivityContent';
-import FormErrors from './FormErrros';
+import FormErrors from './FormErros';
 
 export default function ReplyForm(props) {
   const [count, setCount] = React.useState(0);
@@ -21,9 +21,7 @@ export default function ReplyForm(props) {
     try {
       const backend_url = `${process.env.REACT_APP_BACKEND_URL}/api/activities/${props.activity.uuid}/reply`
       const access_token = await getAccessToken();
-      console.log("UUID")
-      console.log(props.activity.uuid) 
-      const res = await fetch(backend_url, {
+      var res = await fetch(backend_url, {
         method: "POST",
         headers: {
           'Accept': 'application/json',
@@ -31,7 +29,6 @@ export default function ReplyForm(props) {
           'Authorization': `Bearer ${access_token}`
         },
         body: JSON.stringify({
-          activity_uuid: props.activity.uuid,
           message: message
         }),
       });
@@ -54,7 +51,7 @@ export default function ReplyForm(props) {
         console.log(res)
       }
     } catch (err) {
-      setErrors(["generic_500"])
+      setErrors([`generic_${res.status}`])
       console.log(err);
     }
   }

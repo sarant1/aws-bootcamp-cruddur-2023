@@ -11,19 +11,15 @@ class CreateActivity:
       })
       
   def query_object_activity(self, uuid):
-    sql = db.template('activities', 'object')
-
-    db.query_commit(sql)
-    #def query_object_activity():
-    
+    sql = db.template('activities', 'object')    
     return db.query_object_json(sql, {
       'uuid': uuid,
     })
 
-  def run(self, message, cognito_user_id, ttl):
+  def run(self, cognito_user_id, message, ttl):
     model = {
-      'errors': None,
-      'data': None
+      'errors': {},
+      'data': {}
     }
     
     now = datetime.now(timezone.utc).astimezone()
@@ -49,17 +45,17 @@ class CreateActivity:
       model['errors'] = ['cognito_user_id_blank']
 
     if message == None or len(message) < 1:
-      model['errors'] = ['message_blank'] 
+      model['errors'] = ['message_blank']
     elif len(message) > 280:
       model['errors'] = ['message_exceed_max_chars'] 
 
     if model['errors']:
       model['data'] = {
-        'handle':  user_handle,
+        # 'handle':  user_handle,
         'message': message
       }   
     else:
-      expires_at = (now + ttl_offset )
+      expires_at = (now + ttl_offset)
       uuid = self.create_activity(cognito_user_id, message, expires_at)
 
       object_json = self.query_object_activity(uuid)

@@ -47,11 +47,7 @@ def load(app):
   def data_activities():
     message = request.json['message']
     ttl = request.json['ttl']
-    print("---------CHECKING_PARAMS-----------", flush=True)
-    print(g.cognito_user_id, flush=True)
-    print(message, flush=True)
-    print(ttl, flush=True)
-    model = CreateActivity().run(message, g.cognito_user_id, ttl)
+    model = CreateActivity().run(g.cognito_user_id, message, ttl)
     return model_json(model)
 
   @app.route("/api/activities/<string:activity_uuid>/reply", methods=['POST','OPTIONS'])
@@ -60,5 +56,5 @@ def load(app):
   def data_activities_reply(activity_uuid):
     print("-0-0-0--0-0-0-00---activity_uuid:", activity_uuid, flush=True)
     message = request.json['message']
-    model = CreateReply().run(message, g.cognito_user_id, activity_uuid)
+    model = CreateReply().run(g.cognito_user_id, message, activity_uuid)
     return model_json(model)
