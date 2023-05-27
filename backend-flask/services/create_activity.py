@@ -18,8 +18,8 @@ class CreateActivity:
 
   def run(self, cognito_user_id, message, ttl):
     model = {
-      'errors': {},
-      'data': {}
+      'errors': None,
+      'data': None
     }
     
     now = datetime.now(timezone.utc).astimezone()

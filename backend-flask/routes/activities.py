@@ -32,7 +32,7 @@ def load(app):
 
   @app.route("/api/activities/notifications", methods=['GET'])
   def data_notifications():
-    data = NotificationsActivities.run()
+    data = NotificationsActivites.run()
     return data, 200
 
   @app.route("/api/activities/search", methods=['GET'])
@@ -48,6 +48,7 @@ def load(app):
     message = request.json['message']
     ttl = request.json['ttl']
     model = CreateActivity().run(g.cognito_user_id, message, ttl)
+    print("model:", model, flush=True)
     return model_json(model)
 
   @app.route("/api/activities/<string:activity_uuid>/reply", methods=['POST','OPTIONS'])
@@ -57,4 +58,5 @@ def load(app):
     print("-0-0-0--0-0-0-00---activity_uuid:", activity_uuid, flush=True)
     message = request.json['message']
     model = CreateReply().run(g.cognito_user_id, message, activity_uuid)
+    
     return model_json(model)

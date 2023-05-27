@@ -29,6 +29,7 @@ export default function ActivityForm(props) {
         setErrors: setErrors,
         success: function(data){
           // add activity to the feed
+          console.log('success',data)
           props.setActivities(current => [data,...current]);
           // reset and close the form
           setCount(0)
