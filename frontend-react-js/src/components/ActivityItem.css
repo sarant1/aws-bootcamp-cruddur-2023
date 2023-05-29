@@ -4,6 +4,15 @@
   border-bottom: solid 1px rgb(31,36,49);
   overflow: hidden;
 }
+
+a.activity_item {
+  text-decoration: none;
+  
+}
+a.activity_item:hover {
+  background: rgba(255,255,255, 0.15)
+}
+
 .activity_item:last-child {
   border-bottom: none;
 }
