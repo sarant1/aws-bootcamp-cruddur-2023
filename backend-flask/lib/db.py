@@ -2,6 +2,9 @@ from psycopg_pool import ConnectionPool
 import os,sys,re
 from flask import current_app as app
 
+blue = "\033[94m"
+no_color = "\033[0m"
+
 class Db:
   def __init__(self):
     self.init_pool()
@@ -19,8 +22,9 @@ class Db:
   def print_sql(self,title,sql,params={}):
     cyan = '\033[96m'
     no_color = '\033[0m'
+    self.print_params(params)
     print(f'{cyan} SQL STATEMENT-[{title}]------{no_color}')
-    print(sql,params)
+    print(sql)
 
   def template(self, *args):
     pathing = list((app.root_path, 'db', 'sql') + args)
@@ -49,7 +53,7 @@ class Db:
             returning_id = cur.fetchone()[0]
         conn.commit()
         if is_returning_id:
-          print("RETURNING ID")
+          print(f"{blue}RETURNING ID{no_color}")
           print(returning_id, flush=True)
           return returning_id 
     except Exception as err:

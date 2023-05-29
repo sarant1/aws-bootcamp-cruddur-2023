@@ -2,6 +2,7 @@ import {ReactComponent as RepostIcon} from './svg/repost.svg';
 
 export default function ActivityActionRepost(props) { 
   const onclick = (event) => {
+    event.preventDefault()
     console.log('trigger repost')
   }
 

@@ -6,9 +6,11 @@ import DesktopNavigation  from '../components/DesktopNavigation';
 import DesktopSidebar     from '../components/DesktopSidebar';
 import ActivityFeed from '../components/ActivityFeed';
 import ActivityForm from '../components/ActivityForm';
-import { checkAuth, getAccessToken} from '../lib/CheckAuth';
+import { checkAuth } from '../lib/CheckAuth';
 import ProfileHeading from '../components/ProfileHeading';
 import ProfileForm from '../components/ProfileForm';
+
+import { get } from '../lib/Requests';
 
 export default function UserFeedPage() {
   const [profile, setProfile] = React.useState([]);
@@ -21,26 +23,16 @@ export default function UserFeedPage() {
   const params = useParams();
 
   const loadData = async () => {
-    try {
-      const backend_url = `${process.env.REACT_APP_BACKEND_URL}/api/activities/@${params.handle}`
-      const access_token = await getAccessToken();
-      const res = await fetch(backend_url, {
-        headers: {
-          Authorization: `Bearer ${access_token}`
-        },
-        method: "GET"
-      });
-      let resJson = await res.json();
-      if (res.status === 200) {
-        setProfile(resJson.profile)
-        setActivities(resJson.activities)
-      } else {
-        console.log(res)
+    const url = `${process.env.REACT_APP_BACKEND_URL}/api/activities/@${params.handle}`
+    get(url,{
+      auth: false,
+      success: function(data){
+        console.log('setprofile',data.profile)
+        setProfile(data.profile)
+        setActivities(data.activities)
       }
-    } catch (err) {
-      console.log(err);
-    }
-  };
+    })
+  }
 
   React.useEffect(()=>{
     //prevents double call
@@ -49,7 +41,7 @@ export default function UserFeedPage() {
 
     loadData();
     checkAuth(setUser);
-  }, [])
+  })
 
   return (
     <article>
