@@ -144,7 +144,7 @@ def jwt_required(f=None, on_error=None):
             g.cognito_user_id = claims['sub']  # storing the user_id in the global g object
         except TokenVerifyError as e:
             # unauthenticated request
-            app.logger.debug(e)
+            # app.logger.debug(e)
             if on_error:
                 return on_error(e)
             return {}, 401
