@@ -4,6 +4,7 @@ VALUES
   ('Andrew Brown', 'andrew@exampro.co' ,'andrewbrown' ,'MOCK'),
   ('Andrew Bayko', 'bayko@exampro.co' ,'bayko','MOCK'),
   ('Samuel Arant', 'samuel.arant10@gmail.com','sarant1','MOCK'),
+  ('Albert Einstein', 'samuel.arant10+1@gmail.com','sarant2','MOCK'),
   ('Londo Mollari', 'lmoralli@exampro.co' ,'londo','MOCK');
 
 

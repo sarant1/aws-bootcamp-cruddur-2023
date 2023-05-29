@@ -22,4 +22,4 @@ class ReplyToActivityUuidToStringMigration:
     db.query_commit(ReplyToActivityUuidToStringMigration.rollback_sql(self),{
     })
 
-migration = ReplyToActivityUuidToStringMigration
+migration = ReplyToActivityUuidToStringMigration()
