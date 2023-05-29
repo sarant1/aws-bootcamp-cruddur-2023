@@ -9,8 +9,7 @@ CREATE TABLE public.users (
   handle text,
   email text,
   cognito_user_id text,
-  created_at TIMESTAMP default current_timestamp NOT NULL,
-  bio text
+  created_at TIMESTAMP default current_timestamp NOT NULL
 );
 
 CREATE TABLE public.activities (
