@@ -23,10 +23,9 @@ async function request(method,url,payload_data,options){
       attrs.body = JSON.stringify(payload_data)
     }
 
-    console.log("ENTER REQUEST")
     res = await fetch(url,attrs)
     let data = await res.json();
-    console.log("EXIT REQUEST RESPONSE", data)
+    
     if (res.status === 200) {
       options.success(data)
     } else {

@@ -19,6 +19,9 @@ export default function ActivityForm(props) {
 
   const onsubmit = async (event) => {
     event.preventDefault();
+
+    props.socket.emit('new message', message)
+
     const url = `${process.env.REACT_APP_BACKEND_URL}/api/messages`
     let payload_data = { 'message': message }
     if (params.handle) {
@@ -35,10 +38,11 @@ export default function ActivityForm(props) {
           console.log('redirect to message group')
           window.location.href = `/messages/${data.message_group_uuid}`
         } else {
-          props.setMessages(current => [...current,data]);
+          props.setMessages(current => [...current, data]);
         }
       }
     })
+    
   }
 
   const textarea_onchange = (event) => {
@@ -55,7 +59,8 @@ export default function ActivityForm(props) {
         type="text"
         placeholder="send a direct message..."
         value={message}
-        onChange={textarea_onchange} 
+        onChange={textarea_onchange}
+        className="scroll"
       />
       <div className='submit'>
         <div className={classes.join(' ')}>{1024-count}</div>

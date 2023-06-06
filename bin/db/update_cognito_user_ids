@@ -35,13 +35,15 @@ def get_cognito_user_ids():
   response = client.list_users(**params)
   users = response['Users']
   dict_users = {}
+
+
+  
   for user in users:
     attrs = user['Attributes']
     sub    = next((a for a in attrs if a["Name"] == 'sub'), None)
     handle = next((a for a in attrs if a["Name"] == 'preferred_username'), None)
     dict_users[handle['Value']] = sub['Value']
-    return dict_users
-
+  return dict_users
 
 users = get_cognito_user_ids()
 

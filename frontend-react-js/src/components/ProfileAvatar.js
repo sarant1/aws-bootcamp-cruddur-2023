@@ -7,7 +7,6 @@ export default function ProfileAvatar(props) {
         backgroundSize: 'cover',
         backgroundPosition: 'center',
     };
-    console.log("HELLO WORLD")
   return (
     <div 
         className="profile-avatar"

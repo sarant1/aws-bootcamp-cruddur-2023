@@ -6,7 +6,7 @@ class UserActivities:
   def run(self, user_handle):
     print("USER HANDLE================", user_handle)
     # x-ray -----
-    segment = xray_recorder.begin_segment('user_activities')
+    # segment = xray_recorder.begin_segment('user_activities')
     model = {
       'errors': None,
       'data': None
@@ -24,7 +24,7 @@ class UserActivities:
       model['data'] = results
     
 
-    subsegment = xray_recorder.begin_subsegment('mock-data')
+    # subsegment = xray_recorder.begin_subsegment('mock-data')
     # x-ray ----
 
     now = datetime.now(timezone.utc).astimezone()
@@ -32,7 +32,7 @@ class UserActivities:
         "now": now.isoformat(),
         "results-size": len(model['data'])
       }
-    subsegment.put_metadata('key', dict, 'namespace')
+    # subsegment.put_metadata('key', dict, 'namespace')
 
     # close the subsegment
     # xray_recorder.end_subsegment()

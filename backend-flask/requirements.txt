@@ -18,3 +18,9 @@ psycopg[binary]
 psycopg[pool]
 
 boto3
+
+flask-socketio
+eventlet
+
+gevent
+gevent-websocket
