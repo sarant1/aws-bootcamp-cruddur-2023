@@ -21,7 +21,7 @@ export function message_time_ago(value){
     return `${Math.round(diff_mins)}m`;
   } else {
     console.log('dd', diff_mins,diff_hours)
-    return 'unknown'
+    return 'now'
   }
 }
 

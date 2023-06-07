@@ -19,33 +19,63 @@ export default function MessageGroupPage() {
   const [popped, setPopped] = React.useState([]);
   const [user, setUser] = React.useState(null);
   const [socketConnected, setSocketConnected] = React.useState(false);
+  const [didJoinRoom, setDidJoinRoom] = React.useState(false);
   const dataFetchedRef = React.useRef(false);
   const params = useParams();
 
 
   
 
-  // const setupWebsocket = () => {
-  //   socket = io(`${process.env.REACT_APP_BACKEND_URL}`)
-  //   socket.on('connect', () => {
-  //   setSocketConnected(true)
-  //   console.log("CONNECTED TO WEBSOCKET")
-  //   })
-  // }
-
-  const sendMessage = () => {
-    console.log("TESTING123")
-    socket.emit('new message', 'THIS IS WORKING !!')
+  // This will join the chat if user is defined and they are not already in the room
+  if (user && !didJoinRoom) {
+    const data = {
+      "username": user.handle,
+      "room": params.message_group_uuid
+    };
+    socket.emit('join', data);
+    console.log("successfully joined room")
+    setDidJoinRoom(true)
   }
 
-  React.useEffect(() => {
+  React.useEffect( () => {
+    checkAuth(setUser)
     socket = io(`${process.env.REACT_APP_BACKEND_URL}`)
-    socket.on('connect', () => {
-    setSocketConnected(true)
-    console.log("CONNECTED TO WEBSOCKE")
+    socket.on('connect',  () => {
+      console.log("Connected to websocket server")
+
+      socket.on('new message', (data) => {
+        console.log('new message:',data)
+        setMessages(current => [...current, data])
+      })
     })
   }, [])
 
+  React.useEffect(()=>{
+    //prevents double call
+    if (dataFetchedRef.current) return;
+    dataFetchedRef.current = true;
+
+    loadMessageGroupsData();
+    loadMessageGroupData();
+
+  }, [])
+
+
+  
+
+
+  async function loadMessageGroupData () {
+    const url = `${process.env.REACT_APP_BACKEND_URL}/api/messages/${params.message_group_uuid}`
+    get(url,{
+      auth: true,
+      success: function (data){
+        setMessages(data)
+      }
+    })
+
+  }
+
+  
 
   const loadMessageGroupsData = async () => {
     const url = `${process.env.REACT_APP_BACKEND_URL}/api/message_groups`
@@ -57,38 +87,17 @@ export default function MessageGroupPage() {
     })
   }
 
-  const loadMessageGroupData = async () => {
-    const url = `${process.env.REACT_APP_BACKEND_URL}/api/messages/${params.message_group_uuid}`
-    get(url,{
-      auth: true,
-      success: function (data){
-        setMessages(data)
-      }
-    })
-  }
-
-  React.useEffect(()=>{
-    //prevents double call
-    if (dataFetchedRef.current) return;
-    dataFetchedRef.current = true;
-
-    loadMessageGroupsData();
-    loadMessageGroupData();
-    checkAuth(setUser);
-  })
+  
   
   return (
     <article>
       <DesktopNavigation user={user} active={'home'} setPopped={setPopped} />
       <section className='message_groups'>
-        <MessageGroupFeed message_groups={messageGroups} />
+        <MessageGroupFeed message_groups={messageGroups} socket={socket}/>
       </section>
       <div className='content messages'>
-        <MessagesFeed messages={messages} />
-        <MessagesForm setMessages={setMessages}  socket={socket}/>
-        <button onClick={sendMessage}>
-          SEND MESSAGE
-        </button>
+        <MessagesFeed messages={messages} socket={socket} />
+        <MessagesForm setMessages={setMessages}  socket={socket} setUser={setUser} user={user}/>
       </div>
     </article>
   );

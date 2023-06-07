@@ -23,6 +23,9 @@ from time import strftime
 from flask_socketio import SocketIO
 from flask_socketio import join_room, leave_room
 
+import random
+import string
+
 
 app = Flask(__name__)
 
@@ -47,14 +50,43 @@ routes.users.load(app)
 routes.messages.load(app)
 
 
+def generate_random_string(length):
+    random_string = ''.join(random.choice(string.ascii_letters + string.digits) for _ in range(length))
+    return random_string
+
+
 @socketio.on('connect')
 def connect(argument):
   print("user has connected")
 
 @socketio.on('new message')
 def new_message(data):
-   print("new message recieved to server")
-   print(data, flush=True)
+
+    recieved_message = {
+        'display_name': data['display_name'],
+        'message': data['message'],
+        'handle': data['handle'],
+        'key': generate_random_string(10),
+        'created_at': 'now'
+    }
+    socketio.emit('new message', recieved_message, to=data['room'], include_self=False)
+
+# Joining a room
+@socketio.on('join')
+def on_join(data):
+    username = data['username']
+    room = data['room']
+    join_room(room)
+    print(f"User {username} has joined room {room}", flush=True)
+    socketio.send(username + ' has entered the room.', to=room)
+
+# Leaving a room
+@socketio.on('leave')
+def on_leave(data):
+    username = data['username']
+    room = data['room']
+    leave_room(room)
+    socketio.send(username + ' has left the room.', to=room)
 
 @socketio.on('disconnect')
 def test_disconnect():

@@ -26,7 +26,7 @@ form.message_form textarea:focus {
   border: solid 1px rgb(149,0,255,1);
 }
 
-form.message_form .submit {
+form.message_form .submit-button {
   display: flex;
   flex-direction: row;
   justify-content: flex-end;
