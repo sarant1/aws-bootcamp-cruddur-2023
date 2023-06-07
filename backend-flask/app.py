@@ -36,7 +36,7 @@ frontend = os.getenv('FRONTEND_URL')
 backend = os.getenv('BACKEND_URL')
 origins = [frontend, backend]
              
-socketio = SocketIO(app, cors_allowed_origins=origins, pingTimeout=60000)
+socketio = SocketIO(app, cors_allowed_origins="*", pingTimeout=60000)
 
 init_cors(app)
 
