@@ -45,7 +45,7 @@ export default function ActivityForm(props) {
         }
       }
     })
-    
+
     await checkAuth(props.setUser)
     .then(() => {
       const socket_message_data = {
@@ -75,7 +75,7 @@ export default function ActivityForm(props) {
         placeholder="send a direct message..."
         value={message}
         onChange={textarea_onchange}
-        className="scroll"
+        className="no-scrollbars"
       />
       <div className='submit-button'>
         <div className={classes.join(' ')}>{1024-count}</div>

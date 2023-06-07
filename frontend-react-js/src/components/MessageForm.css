@@ -56,3 +56,20 @@ form.message_form .count {
 form.message_form .count.err {
   color: rgb(255, 0, 0)
 }
+
+.no-scrollbars {
+  scrollbar-width: thin;
+  scrollbar-color: transparent transparent;
+}
+
+.no-scrollbars::-webkit-scrollbar {
+  width: 8px;
+}
+
+.no-scrollbars::-webkit-scrollbar-thumb {
+  background-color: transparent;
+}
+
+.no-scrollbars::-webkit-scrollbar-track {
+  background-color: transparent;
+}

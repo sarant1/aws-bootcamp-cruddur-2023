@@ -21,12 +21,13 @@ export default function MessageFeed(props) {
       <div className='message_feed_heading'>
         <div className='title'>Messages</div>
       </div>
-      <div className='message_feed_collection' >
-        {props.messages.map(message => {
-        return  <MessageItem key={message.uuid} message={message} />
-        })}
+      <div className="messages-wrapper">
+        <div className='message-container' >
+          {props.messages.map(message => {
+          return  <MessageItem key={message.uuid} message={message} />
+          })}
+        </div>
       </div>
-
       <div ref={messagesRef} />
     </div>
   );
