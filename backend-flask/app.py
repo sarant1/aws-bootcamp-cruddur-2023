@@ -31,8 +31,12 @@ app = Flask(__name__)
 
 app.config['SECRET_KEY'] = 'secret!'
 
-# SocketIO               
-socketio = SocketIO(app, cors_allowed_origins=['*', 'http://localhost:3000'], pingTimeout=60000)
+# SocketIO
+frontend = os.getenv('FRONTEND_URL')
+backend = os.getenv('BACKEND_URL')
+origins = [frontend, backend]
+             
+socketio = SocketIO(app, cors_allowed_origins=origins, pingTimeout=60000)
 
 init_cors(app)
 
