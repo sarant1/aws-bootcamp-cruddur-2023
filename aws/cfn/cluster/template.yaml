@@ -21,31 +21,9 @@ Parameters:
     Default: CrdNet
   CertificateArn:
     Type: String
-  FrontendContainerPort:
-    Type: Number
-    Default: 3000
   BackendContainerPort:
     Type: Number
     Default: 4567
-
-  # Frontend Health Check Config
-
-  FrontendHealthCheckIntervalSeconds: 
-    Type: Number
-    Default: 20
-  FrontendHealthCheckPath:
-    Type: String
-    Default: "/"
-  FrontendHealthCheckTimeoutSeconds: 
-    Type: Number
-    Default: 5
-  FrontendHealthyThresholdCount:
-    Type: Number
-    Default: 2
-  FrontendUnhealthyThresholdCount:
-    Type: Number
-    Default: 2
-
 
   # Backend Health Check Config 
 
@@ -64,6 +42,7 @@ Parameters:
   BackendUnhealthyThresholdCount:
     Type: Number
     Default: 2
+
 Resources:
   FargateCluster: # Logical Name
   # https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ecs-cluster.html
@@ -191,7 +170,7 @@ Resources:
         HttpCode: 200
       Port: !Ref BackendContainerPort
       Protocol: HTTP
-      ProtocolVersion: HTTP2
+      ProtocolVersion: HTTP1
       TargetGroupAttributes: 
         - Key: deregistration_delay.timeout_seconds
           Value: 0
@@ -216,8 +195,4 @@ Outputs:
     Value: !Ref BackendTG
     Export: 
       Name: !Sub "${AWS::StackName}BackendTG"
-  FrontendTG:
-    Value: !Ref FrontendTG
-    Export: 
-      Name: !Sub "${AWS::StackName}FrontendTG"
 
