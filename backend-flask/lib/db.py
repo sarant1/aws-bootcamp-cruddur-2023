@@ -10,7 +10,7 @@ class Db:
     self.init_pool()
 
   def init_pool(self):
-    connection_url = os.getenv("CONNECTION_URL")
+    connection_url = os.getenv("PROD_CONNECTION_URL")
     self.pool = ConnectionPool(connection_url)
 
   def print_params(self, params):
