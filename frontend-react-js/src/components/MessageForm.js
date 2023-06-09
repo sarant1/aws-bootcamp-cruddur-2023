@@ -46,6 +46,7 @@ export default function ActivityForm(props) {
       }
     })
 
+    // We must do checkAuth before sending message so the user is set
     await checkAuth(props.setUser)
     .then(() => {
       const socket_message_data = {

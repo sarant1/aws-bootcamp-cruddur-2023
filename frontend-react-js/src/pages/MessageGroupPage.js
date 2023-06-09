@@ -96,7 +96,7 @@ export default function MessageGroupPage() {
         <MessageGroupFeed message_groups={messageGroups} socket={socket}/>
       </section>
       <div className='content messages'>
-        <MessagesFeed messages={messages} socket={socket} />
+        <MessagesFeed messages={messages} />
         <MessagesForm setMessages={setMessages}  socket={socket} setUser={setUser} user={user}/>
       </div>
     </article>
