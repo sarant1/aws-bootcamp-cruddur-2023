@@ -29,7 +29,7 @@ if __name__ == "__main__":
 
 And then in my docker file I fixed it so that it does not use flask run which would default to Werkzeug
 
-```docker
+```dockerfile
 FROM 049843000081.dkr.ecr.us-east-1.amazonaws.com/cruddur-python:3.10-slim-buster
 
 WORKDIR /backend-flask
@@ -74,7 +74,7 @@ def new_message(data):
 
 
 
-I also set up rooms that when a user loaded a specific message group, that is the room they join so that only they recieve messages from eacother.
+I also set up rooms that when a user loaded a specific message group, that is the room they join so that only they recieve messages from eachother.
 
 ```py
 # Joining a room
@@ -146,4 +146,4 @@ Heres some of the things I learned in my research:
 
 ## One major drawback of this setup
 
-In my research I learned that this method would not at all support horizontal scaling because if a two users joined different backend servers, then there would be no way for them to communicate directly with eachother.  A possible solution is to use some sort of advanced routing the load balancer to ensure both users get connected to the same web server.  Another better solution is using a redis server to store the state, so that a user could communicate with another user who is connected to a completely different websocket.  
+In my research I learned that this method would not at all support horizontal scaling because if a two users joined different backend servers, then there would be no way for them to communicate directly with eachother.  A possible solution is to use some sort of advanced routing with the load balancer to ensure both users get connected to the same backend web server.  Another better solution is using a redis server to store the state, so that a user could communicate with another user who is connected to a completely different websocket.  
