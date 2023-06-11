@@ -1,4 +1,4 @@
-# Adding real time messaging socket io
+# Adding real time messaging with socket io
 
 ## Flask - SocketIO
 
@@ -141,7 +141,7 @@ Heres some of the things I learned in my research:
 
 - HTTP/2 uses a single TCP connection and many streams within that TCP connection for all the req/res from the server.  This is much more efficient
 
-- There are other possible solutions for solving real-time problems that support real-time.  One possible solution is using Server Side Events, Webtransport Protocols, and HTTP/3.  I would have to do more research to find out specific uses cases for each one, but there is possible solutions that do not require websockets.
+- There are other possible solutions for solving real-time problems that support real-time.  Possible solutios include using Server Side Events, Webtransport Protocol, and HTTP/3.  I would have to do more research to find out specific uses cases for each one, but there is possible solutions that do not require websockets.
 
 
 ## One major drawback of this setup
